@@ -24,6 +24,8 @@ public:
 	void comprarMaterial(&Catador, float peso, Material);
 	void calcularPreco(float, float);
 	void consultarPrecoCooperativa();
+	void relatorio();
+	void cadastro();
 };
 
 
