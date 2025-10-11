@@ -3,16 +3,13 @@
 
 class Material {
 private:
-	float preco;
 	float peso;
 	int tipo;
 public:
 	Material();
-	Material(float, float, int);
-	float getPreco();
+	Material(float, int);
 	float getPeso();
 	int getTipo();
-	void setPreco(float);
 	void setPeso(float);
 	void setTipo(int);
 	~Material();
