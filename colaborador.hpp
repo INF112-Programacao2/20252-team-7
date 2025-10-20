@@ -3,8 +3,9 @@
 
 #include <string>
 #include "material.hpp"
+#include "Pessoa.hpp"
 
-class Colaborador {
+class Colaborador : public Pessoa {
 private:
 	int pontos;
 	Material material;

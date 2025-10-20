@@ -24,6 +24,9 @@ class Pessoa {
         void setNome( std::string nome );
         void setEndereco( std::string endereco );
         void setMaterial( Material material );
+
+        //Métodos
+		virtual void definirMaterial(Material, float, int);
 };
 
 #endif;

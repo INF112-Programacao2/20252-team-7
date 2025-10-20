@@ -1,4 +1,5 @@
 #include "Pessoa.hpp"
+#include "material.hpp"
 #include <string>
 
 //Construtor
@@ -30,4 +31,10 @@ void Pessoa::setEndereco( std::string novoEndereco ) {
 }
 void Pessoa::setMaterial( Material novoMaterial ) {
     this->_material = novoMaterial;
+}
+
+//Métodos
+virtual void Pessoa::cadastro(Material mat, float p, int t) {
+    mat.setPeso(p);
+	mat.setTipo(t);
 }
