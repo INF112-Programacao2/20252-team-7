@@ -8,12 +8,9 @@
 class Colaborador : public Pessoa {
 private:
 	int pontos;
-	Material material;
-	std::string endereco;
 public:
 	//Construtor e destrutor
-	Colaborador();
-	Colaborador(int, Material, std::string);
+	Colaborador(Pessoa pessoa);
 	~Colaborador();
 
 	//Getters e Setters
@@ -23,6 +20,9 @@ public:
 	void setPontos(int);
 	void setMaterial(Material);
 	void setEndereco(std::string);
+
+	//Outros métodos
+	void cadastrarColaborador(std::string nome, std::string endereco, int cpf, Material material, int pontos);
 };
 
 

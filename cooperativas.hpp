@@ -1,7 +1,9 @@
-#ifndef COOPERATIVAS_H
-#define COOPERATIVAS_H
+#ifndef COOPERATIVAS_HPP
+#define COOPERATIVAS_HPP
 #include <iostream>
-#include "material.h"
+#include "material.hpp"
+#include "Catador.hpp"
+#include "colaborador.hpp"
 
 class Cooperativas {
 private:
@@ -26,11 +28,11 @@ public:
 	void setMaterial(Material);
 
 	//Métodos
-	void comprarMaterial(&Catador, float peso, Material);
+	void comprarMaterial(Catador&, float peso, Material);
 	void calcularPreco(float, float);
 	void consultarPrecoCooperativa();
 	void relatorio();
-	void cadastro();
+	void cadastro(float, std::string, std::string, Material);
 };
 
 

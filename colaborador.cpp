@@ -2,15 +2,8 @@
 #include "material.hpp"
 #include <iostream>
 
-Colaborador::Colaborador() {
-	pontos = 0;
-	endereco = "";
-}
-
-Colaborador::Colaborador(int pontos, Material material, std::string endereco) {
-	this->pontos = pontos;
-	this->material = material;
-	this->endereco = endereco;
+Colaborador::Colaborador(Pessoa pessoa) : Pessoa(pessoa.getNome(), pessoa.getEndereco(), pessoa.getCpf(), pessoa.getMaterial()) {
+	this->pontos = 0;
 }
 
 int Colaborador::getPontos() {
@@ -39,3 +32,15 @@ void Colaborador::setEndereco(std::string endereco) {
 
 Colaborador::~Colaborador() {}
 
+void Colaborador::cadastrarColaborador(std::string nome, std::string endereco, int cpf, Material material, int pontos) : Pessoa::cadastro(nome, endereco, cpf, material) {
+	std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
+
+	if (!arquivo.is_open()) {
+		std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
+		return;
+	}
+
+	arquivo << "," << pontos;
+
+	arquivo.close();
+}

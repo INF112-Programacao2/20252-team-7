@@ -1,5 +1,7 @@
-#include "cooperativas.h"
-#include "material.h"
+#include "cooperativas.hpp"
+#include "material.hpp"
+#include "Catador.hpp"
+#include "colaborador.hpp"
 #include <iostream>
 
 Cooperativas::Cooperativas() {
@@ -54,13 +56,30 @@ void Cooperativas::calcularPreco(float peso, float preco) {
 	std::cout << "Total a pagar: R$ " << total << std::endl;
 }
 
-void Cooperativas::comprarMaterial(&Catador catador, float peso, float preco) {
-	if () {
-		// verificar se o endereço está disponível
+void Cooperativas::comprarMaterial(Catador& catador, float peso, float preco) {
+	if (catador.getEndereco == this->endereco) {
+		catador.setSaldo(catador.getSaldo() + (peso * preco));
 	}
-	catador.setSaldo(catador.getSaldo() + (peso * preco));
 }
 
 void Cooperativas::consultarPrecoCooperativa() {
 	
+}
+
+void Cooperativas::relatorio() {
+	
+}
+
+void Cooperativas::cadastro(float preco, std::string endereco, std::string cnpj, Material material) {
+	std::ofstream arquivo("cadastro.txt", std::ios::app);
+
+	if (!arquivo.is_open()) {
+		std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
+		return 1;
+	}
+
+	arquivo << preco << "," << endereco << "," << cnpj << ","
+		<< material.getPeso() << "," << material.getTipo();
+
+	arquivo.close();
 }

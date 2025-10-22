@@ -1,6 +1,7 @@
 #include "Pessoa.hpp"
 #include "material.hpp"
 #include <string>
+#include <fstream>
 
 //Construtor
 Pessoa::Pessoa( std::string nome, std::string endereco, int cpf, Material material ) :
@@ -34,7 +35,21 @@ void Pessoa::setMaterial( Material novoMaterial ) {
 }
 
 //Métodos
-virtual void Pessoa::cadastro(Material mat, float p, int t) {
+virtual void Pessoa::definirMaterial(Material mat, float p, int t) {
     mat.setPeso(p);
-	mat.setTipo(t);
+    mat.setTipo(t);
+}
+
+void Pessoa::cadastro(std::string nome, std::string endereco, int cpf, Material material) {
+	std::ofstream arquivo("cadastro.txt", std::ios::app);
+
+    if (!arquivo.is_open()) {
+		std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
+        return 1;
+    }
+
+    arquivo << nome << "," << endereco << "," << cpf << "," 
+            << material.getPeso() << "," << material.getTipo();
+
+	arquivo.close();
 }

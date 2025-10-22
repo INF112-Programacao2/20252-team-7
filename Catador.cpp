@@ -1,4 +1,5 @@
 #include "Catador.hpp"
+#include "colaborador.hpp"
 #include "Pessoa.hpp"
 #include <iostream>
 
@@ -29,4 +30,17 @@ void Catador::recolherMaterial( Material material ) {
 	this->setMaterial(matAtual);
 }
 
+void Catador::cadastro(std::string nome, std::string endereco, int cpf, Material material, float saldo) : Pessoa::cadatro(nome, endereco, cpf, material) {
 
+
+	std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
+
+	if (!arquivo.is_open()) {
+		std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
+		return;
+	}
+
+	arquivo << "," << saldo;
+
+	arquivo.close();
+}

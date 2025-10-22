@@ -27,6 +27,7 @@ class Pessoa {
 
         //Métodos
 		virtual void definirMaterial(Material, float, int);
+        void cadastro(std::string, std::string, int, Material);
 };
 
 #endif;
