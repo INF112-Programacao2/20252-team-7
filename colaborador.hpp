@@ -15,15 +15,14 @@ public:
 
 	//Getters e Setters
 	int getPontos();
-	Material getMaterial();
-	std::string getEndereco();
+	//Material getMaterial();
+	//std::string getEndereco();
 	void setPontos(int);
-	void setMaterial(Material);
-	void setEndereco(std::string);
+	//void setMaterial(Material);
+	//void setEndereco(std::string);
 
-	//Outros métodos
-	void cadastrarColaborador(std::string nome, std::string endereco, int cpf, Material material, int pontos);
+	//Outros mÃ©todos
+	void cadastrarColaborador(std::string nome, std::string endereco, std::string cpf, Material material, int pontos);
 };
-
 
 #endif 
