@@ -1,26 +1,21 @@
 #ifndef CATADOR_HPP
 #define CATADOR_HPP
 
-#include "Pessoa.hpp"
-#include "material.hpp" //deveria ser material e não catador (?)
+#include "Pessoa.hpp"  // ADICIONAR: incluir a classe base
+// REMOVER: #include "colaborador.hpp" - não é necessário
 
 class Catador : public Pessoa {
-    private:
-        float _saldo;
-    public:
-        //Construtor e destrutor.
-        Catador( Pessoa pessoa );
-        ~Catador( );
+private:
+    float _saldo;
+public:
+    Catador(Pessoa pessoa);
+    ~Catador();
 
-        //Função get
-        float getSaldo( );
+    float getSaldo();
+    void setSaldo(float valor);
 
-        //Função set
-        void setSaldo( float valor );
-
-        //Outras funções
-        void recolherMaterial( Material material );
-		void cadastro(std::string nome, std::string endereco, std::string cpf, Material material, float saldo);
+    void recolherMaterial(Material* material);  // MUDEI: ponteiro
+    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material, float saldo);
 };
 
-#endif //!!!!!!!!
+#endif
