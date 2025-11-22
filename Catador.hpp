@@ -2,7 +2,7 @@
 #define CATADOR_HPP
 
 #include "Pessoa.hpp"
-#include "colaborador.hpp"
+#include "material.hpp" //deveria ser material e não catador (?)
 
 class Catador : public Pessoa {
     private:
@@ -20,7 +20,7 @@ class Catador : public Pessoa {
 
         //Outras funções
         void recolherMaterial( Material material );
-		void cadastro(std::string nome, std::string endereco, int cpf, Material material, float saldo);
+		void cadastro(std::string nome, std::string endereco, std::string cpf, Material material, float saldo);
 };
 
-#endif;
+#endif //!!!!!!!!
