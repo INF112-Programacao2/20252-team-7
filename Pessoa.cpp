@@ -16,7 +16,7 @@ std::string Pessoa::getNome( ) {
 std::string Pessoa::getEndereco( ) {
     return this->_endereco;
 }
-int Pessoa::getCpf( ) {
+std::string Pessoa::getCpf( ) {
     return this->_cpf;
 }
 Material Pessoa::getMaterial( ) {
@@ -40,12 +40,12 @@ virtual void Pessoa::definirMaterial(Material mat, float p, int t) {
     mat.setTipo(t);
 }
 
-void Pessoa::cadastro(std::string nome, std::string endereco, int cpf, Material material) {
+void Pessoa::cadastro(std::string nome, std::string endereco, std::string cpf, Material material) {
 	std::ofstream arquivo("cadastro.txt", std::ios::app);
 
     if (!arquivo.is_open()) {
 		std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
-        return 1;
+        return; //obs:função void não retorna "1"
     }
 
     arquivo << nome << "," << endereco << "," << cpf << "," 
