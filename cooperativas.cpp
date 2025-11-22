@@ -56,10 +56,10 @@ void Cooperativas::calcularPreco(float peso, float preco) {
 	std::cout << "Total a pagar: R$ " << total << std::endl;
 }
 
-void Cooperativas::comprarMaterial(Catador& catador, float peso, float preco) {
-	if (catador.getEndereco == this->endereco) {
-		catador.setSaldo(catador.getSaldo() + (peso * preco));
-	}
+void Cooperativas::comprarMaterial(Catador& catador, float peso, float preco) {  // CORRIGIDO: parâmetro preco
+    if (catador.getEndereco() == this->endereco) {  //  () faltando
+        catador.setSaldo(catador.getSaldo() + (peso * preco));
+    }
 }
 
 void Cooperativas::consultarPrecoCooperativa() {
