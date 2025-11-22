@@ -2,31 +2,33 @@
 #define PESSOA_HPP
 
 #include <string>
-#include "material.hpp"
+// REMOVER: #include "material.hpp" - causa include circular
+
+// Declaração antecipada
+class Material;
 
 class Pessoa {
-    private:
-        std::string _nome;
-        std::string _endereco;
-        std::string _cpf; // luis: int para string
-        Material _material;
-    public:
-        Pessoa( std::string nome, std::string endereco, int cpf, Material material ); //Construtor
-        ~Pessoa( );//Destrutor
+private:
+    std::string _nome;
+    std::string _endereco;
+    std::string _cpf;  // JÁ CORRIGIDO: string em vez de int
+    Material* _material;  // MUDEI: ponteiro ou referência
+
+public:
+    Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material);
+    ~Pessoa();
     
-        //Funções get
-        std::string getNome( );
-        std::string getEndereco( );
-        std::string getCpf( ); //luis: int para string
-        Material getMaterial( );
+    std::string getNome();
+    std::string getEndereco();
+    std::string getCpf();
+    Material* getMaterial();  // MUDEI: retorna ponteiro
+    
+    void setNome(std::string nome);
+    void setEndereco(std::string endereco);
+    void setMaterial(Material* material);  // MUDEI: recebe ponteiro
+    
+    void definirMaterial(Material* mat, float p, int t);
+    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+};
 
-        //Funções set
-        void setNome(std::string nome);
-	    void setEndereco(std::string endereco);
-	    void setMaterial(Material material);
-
-		//Métodos
-	    void definirMaterial(Material mat, float p, int t);
-	    void cadastro(std::string nome, std::string endereco, std::string cpf, Material material);
-
-#endif //OBS: após o endif, NÃO UTILIZA-SE ";"
+#endif
