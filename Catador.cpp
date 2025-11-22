@@ -1,7 +1,8 @@
 #include "Catador.hpp"
-#include "colaborador.hpp"
+#include "colaborador.hpp" //Por que est√£o incluindo colaborador e pessoa?
 #include "Pessoa.hpp"
 #include <iostream>
+#include <fstream>
 
 //Construtor
 Catador::Catador( Pessoa pessoa ) : Pessoa( pessoa.getNome( ), pessoa.getEndereco( ), pessoa.getCpf( ), pessoa.getMaterial( ) ) {
@@ -11,17 +12,17 @@ Catador::Catador( Pessoa pessoa ) : Pessoa( pessoa.getNome( ), pessoa.getEnderec
 //Destrutor
 Catador::~Catador() {};
 
-//FunÁ„o get
+//Fun√ß√£o get
 float Catador::getSaldo( ) {
-	return this->_saldo;
+	return _saldo;
 }
 
-//FunÁ„o set
+//Fun√ß√£o set
 void Catador::setSaldo( float valor ) {
-	this->_saldo = valor;
+	_saldo = valor;
 }
 
-//Outras funÁıes
+//Outras fun√ß√µes
 void Catador::recolherMaterial( Material material ) {
 	float pesoAtual = this->getMaterial().getPeso();
 	float novoPeso = pesoAtual + material.getPeso();
@@ -30,8 +31,8 @@ void Catador::recolherMaterial( Material material ) {
 	this->setMaterial(matAtual);
 }
 
-void Catador::cadastro(std::string nome, std::string endereco, int cpf, Material material, float saldo) : Pessoa::cadatro(nome, endereco, cpf, material) {
-
+void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, Material material, float saldo) {
+	 Pessoa::cadatro(nome, endereco, cpf, material);
 
 	std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
 
@@ -40,7 +41,7 @@ void Catador::cadastro(std::string nome, std::string endereco, int cpf, Material
 		return;
 	}
 
-	arquivo << "," << saldo;
+	arquivo << "," << saldo << std::endl;
 
 	arquivo.close();
 }
