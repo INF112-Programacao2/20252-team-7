@@ -1,5 +1,4 @@
-#include "material.h"
-
+#include "material.hpp"  // CORRIGIDO: era "material.h"
 Material::Material() {
 	peso = 0;
 	tipo = 0;
