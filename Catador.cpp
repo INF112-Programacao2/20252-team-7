@@ -1,6 +1,7 @@
 #include "Catador.hpp"
 #include <iostream>
 #include <fstream>
+#include "material.hpp"
 
 // Construtor
 Catador::Catador(Pessoa pessoa) : Pessoa(pessoa.getNome(), pessoa.getEndereco(), pessoa.getCpf(), pessoa.getMaterial()) {

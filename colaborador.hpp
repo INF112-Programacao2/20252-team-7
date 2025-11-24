@@ -2,27 +2,20 @@
 #define COLABORADOR_HPP
 
 #include <string>
-#include "material.hpp"
 #include "Pessoa.hpp"
 
 class Colaborador : public Pessoa {
 private:
-	int pontos;
+    int pontos;
 public:
-	//Construtor e destrutor
-	Colaborador(Pessoa pessoa);
-	~Colaborador();
+    Colaborador(Pessoa pessoa);
+    ~Colaborador();
 
-	//Getters e Setters
-	int getPontos();
-	//Material getMaterial();
-	//std::string getEndereco();
-	void setPontos(int);
-	//void setMaterial(Material);
-	//void setEndereco(std::string);
-
-	//Outros métodos
-	void cadastrarColaborador(std::string nome, std::string endereco, std::string cpf, Material material, int pontos);
+    int getPontos();
+    void setPontos(int pontos);
+    
+    // CORRIGIDO: Material* em vez de Material
+    void cadastrarColaborador(std::string nome, std::string endereco, std::string cpf, Material* material, int pontos);
 };
 
-#endif 
+#endif
