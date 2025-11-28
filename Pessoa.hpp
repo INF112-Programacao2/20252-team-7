@@ -15,17 +15,17 @@ public:
     Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material);
     ~Pessoa();
     
-    std::string getNome();
-    std::string getEndereco();
-    std::string getCpf();
-    Material* getMaterial();
+    std::string getNome() const;
+    std::string getEndereco() const;
+    std::string getCpf() const;
+    Material* getMaterial() const;
     
     void setNome(std::string nome);
     void setEndereco(std::string endereco);
     void setMaterial(Material* material);
     
     void definirMaterial(Material* mat, float p, int t);
-    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+    virtual void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material)=0;
 };
 
 #endif

@@ -8,14 +8,14 @@ class Colaborador : public Pessoa {
 private:
     int pontos;
 public:
-    Colaborador(Pessoa pessoa);
+    Colaborador(const Pessoa& pessoa);
     ~Colaborador();
 
-    int getPontos();
+    int getPontos() const;
     void setPontos(int pontos);
     
     // CORRIGIDO: Material* em vez de Material
-    void cadastrarColaborador(std::string nome, std::string endereco, std::string cpf, Material* material, int pontos);
+    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
 };
 
 #endif
