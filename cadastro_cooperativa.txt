@@ -1,1 +1,5 @@
 CNPJ: 123456789, Endereço: Rua PQP, perto da Casa do KRL, Preço: R$ 4
+CNPJ: 123.456.789-11, Endereço: 12345678945, Preço: R$ 20
+CNPJ: 14725836914, Endereço: qualquer endereço, Preço: R$ 60
+CNPJ: 1245, Endereço: 147258369, Preço: R$ 20
+CNPJ: 9999, Endereço: cdmwqeifj, Preço: R$ 0
