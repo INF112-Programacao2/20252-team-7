@@ -3,4 +3,6 @@ programa
 *.exe
 /build
 /dist
-
+*.txt
+!cadastro_*.txt
+!historico_*.txt

@@ -22,11 +22,11 @@ public:
     
     void setNome(std::string nome);
     void setEndereco(std::string endereco);
-    void setCpf(std::string cpf);           // <<< ADICIONADO
+    void setCpf(std::string cpf);
     void setMaterial(Material* material);
     
     void definirMaterial(Material* mat, float p, int t);
-    virtual void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) = 0;
+    // REMOVIDA a linha problemática: virtual void cadastro(...) = 0;
 };
 
 #endif

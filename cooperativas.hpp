@@ -28,11 +28,16 @@ public:
     void setEndereco(std::string);
     void setMaterial(Material*);
 
-    void comprarMaterial(Catador& catador, float peso, float precoPorKg); // <<< nome correto
+    void comprarMaterial(Catador& catador, float peso, float precoPorKg);
     void calcularPreco(float peso, float precoPorKg);
     void consultarPrecoCooperativa();
     void relatorio();
     void cadastro(float preco, std::string endereco, std::string cnpj, Material* material);
+    
+    // NOVOS MÉTODOS
+    void relatorioMaterialComprado();
+    void registrarCompra(const std::string& nomeCatador, float peso, float precoKg);
+    void visualizarCooperativas();
 };
 
 #endif

@@ -45,3 +45,21 @@ void Colaborador::receberPontos(int pontosBase) {
     pontos += static_cast<int>(bonus + 0.5f);
     std::cout << "Pontos recebidos! Total: " << pontos << "\n";
 }
+
+// ... (mantenha todo o código existente e adicione esta função no final)
+
+void Colaborador::visualizarCooperativas() {
+    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
+    std::ifstream arquivo("cadastro_cooperativa.txt");
+    std::string linha;
+    
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhuma cooperativa cadastrada.\n";
+        return;
+    }
+    
+    while (std::getline(arquivo, linha)) {
+        std::cout << linha << std::endl;
+    }
+    arquivo.close();
+}

@@ -4,6 +4,7 @@
 #include "colaborador.hpp"
 #include <iostream>
 #include <fstream>
+#include <iomanip>  // ADICIONADO para std::setprecision
 
 Cooperativas::Cooperativas() {
     preco = 0;
@@ -76,12 +77,78 @@ void Cooperativas::cadastro(float preco, std::string endereco, std::string cnpj,
         return;
     }
 
-    arquivo << preco << "," << endereco << "," << cnpj << ",";
+    arquivo << "CNPJ: " << cnpj << ", Endereço: " << endereco << ", Preço: R$ " << preco;
     if (material) {
-        arquivo << material->getPeso() << "," << material->getTipo();
+        arquivo << ", Material: " << material->getPeso() << "kg tipo " << material->getTipo();
     }
     arquivo << std::endl;
     arquivo.close();
     
     std::cout << "Cooperativa cadastrada com sucesso!" << std::endl;
+}
+
+void Cooperativas::relatorioMaterialComprado() {
+    std::cout << "\n=== RELATÓRIO DE MATERIAL COMPRADO ===\n";
+    std::ifstream arquivo("historico_compras.txt");
+    std::string linha;
+    
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhuma compra registrada.\n";
+        return;
+    }
+    
+    float totalComprado = 0;
+    while (std::getline(arquivo, linha)) {
+        std::cout << linha << std::endl;
+        
+        // Extrair peso da linha
+        size_t posKg = linha.find("kg");
+        if (posKg != std::string::npos) {
+            // Encontrar início do número
+            size_t start = linha.find("comprou ") + 8;
+            if (start != std::string::npos) {
+                std::string pesoStr = linha.substr(start, posKg - start);
+                try {
+                    float peso = std::stof(pesoStr);
+                    totalComprado += peso;
+                } catch (...) {
+                    // Ignora erro de conversão
+                }
+            }
+        }
+    }
+    arquivo.close();
+    
+    std::cout << "\nTotal comprado: " << totalComprado << " kg\n";
+}
+
+void Cooperativas::registrarCompra(const std::string& nomeCatador, float peso, float precoKg) {
+    std::ofstream arquivo("historico_compras.txt", std::ios::app);
+    if (!arquivo.is_open()) {
+        std::cerr << "Erro ao registrar compra.\n";
+        return;
+    }
+    
+    float valorTotal = peso * precoKg;
+    arquivo << "Cooperativa " << this->cnpj << " comprou " << peso << "kg de " << nomeCatador 
+            << " por R$ " << std::fixed << std::setprecision(2) << valorTotal << std::endl;
+    arquivo.close();
+    
+    std::cout << "Compra registrada no histórico!\n";
+}
+
+void Cooperativas::visualizarCooperativas() {
+    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
+    std::ifstream arquivo("cadastro_cooperativa.txt");
+    std::string linha;
+    
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhuma cooperativa cadastrada.\n";
+        return;
+    }
+    
+    while (std::getline(arquivo, linha)) {
+        std::cout << linha << std::endl;
+    }
+    arquivo.close();
 }

@@ -65,3 +65,49 @@ void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, 
     
     std::cout << "Catador cadastrado com sucesso!" << std::endl;
 }
+
+// ... (mantenha todo o código existente e adicione estas funções no final)
+
+void Catador::visualizarCooperativas() {
+    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
+    std::ifstream arquivo("cadastro_cooperativa.txt");
+    std::string linha;
+    
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhuma cooperativa cadastrada.\n";
+        return;
+    }
+    
+    while (std::getline(arquivo, linha)) {
+        std::cout << linha << std::endl;
+    }
+    arquivo.close();
+}
+
+void Catador::visualizarColaboradores() {
+    std::cout << "\n=== COLABORADORES PARA COLETA ===\n";
+    std::ifstream arquivo("cadastro_colaborador.txt");
+    std::string linha;
+    
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhum colaborador cadastrado.\n";
+        return;
+    }
+    
+    std::string nome, endereco, materialInfo;
+    while (std::getline(arquivo, linha)) {
+        if (linha.find("Nome: ") == 0) {
+            nome = linha.substr(6);
+        } else if (linha.find("Endereço: ") == 0) {
+            endereco = linha.substr(10);
+        } else if (linha.find("Material: ") == 0) {
+            materialInfo = linha.substr(10);
+            // Exibir informações consolidadas
+            std::cout << "Colaborador: " << nome << std::endl;
+            std::cout << "Endereço: " << endereco << std::endl;
+            std::cout << "Material: " << materialInfo << std::endl;
+            std::cout << "------------------------" << std::endl;
+        }
+    }
+    arquivo.close();
+}

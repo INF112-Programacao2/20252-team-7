@@ -50,6 +50,12 @@ colaborador.o: colaborador.cpp colaborador.hpp Pessoa.hpp material.hpp
 cooperativas.o: cooperativas.cpp cooperativas.hpp material.hpp Catador.hpp colaborador.hpp
 	$(CXX) $(CXXFLAGS) -c cooperativas.cpp
 
+administrador.o: administrador.cpp administrador.hpp
+	g++ -Wall -Wextra -pedantic -std=c++11 -g -c administrador.cpp
+
+# E atualize a linha do programa:
+programa: main.o material.o Pessoa.o Catador.o colaborador.o cooperativas.o administrador.o
+	g++ -Wall -Wextra -pedantic -std=c++11 -g -o programa main.o material.o Pessoa.o Catador.o colaborador.o cooperativas.o administrador.o
 # Limpeza
 clean:
 	rm -f *.o $(TARGET) $(TEST_TARGET) cadastro.txt cadastro_catador.txt cadastro_colaborador.txt

@@ -10,3 +10,9 @@ CPF: 02632414245
 Material: 50kg (tipo 1)
 Pontos: 0
 ------------------------
+Nome: Flamengo
+Endereço: Lima, Pera
+CPF: 345.678-98
+Material: 12kg (tipo 34)
+Pontos: 0
+------------------------

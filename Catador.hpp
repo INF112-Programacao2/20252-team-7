@@ -8,13 +8,17 @@ private:
     float _saldo;
 public:
     Catador(const Pessoa& pessoa);
-    Catador(std::string nome, std::string endereco, std::string cpf, Material* material = nullptr); // NOVO
+    Catador(std::string nome, std::string endereco, std::string cpf, Material* material = nullptr);
     ~Catador();
 
     float getSaldo() const;
     void setSaldo(float valor);
     void recolherMaterial(Material* material);
     void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+    
+    // NOVOS MÉTODOS
+    void visualizarCooperativas();
+    void visualizarColaboradores();
 };
 
 #endif
