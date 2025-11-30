@@ -25,8 +25,14 @@ public:
     void setCpf(std::string cpf);
     void setMaterial(Material* material);
     
+    
+    
+    
     void definirMaterial(Material* mat, float p, int t);
     // REMOVIDA a linha problemática: virtual void cadastro(...) = 0;
+
+    
+
 };
 
 #endif
