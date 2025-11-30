@@ -9,13 +9,13 @@ private:
     int pontos;
 public:
     Colaborador(const Pessoa& pessoa);
+    Colaborador(std::string nome, std::string endereco, std::string cpf, Material* material = nullptr); // NOVO
     ~Colaborador();
 
     int getPontos() const;
     void setPontos(int pontos);
-    
-    // CORRIGIDO: Material* em vez de Material
     void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+    void receberPontos(int pontosRecebidos);
 };
 
 #endif

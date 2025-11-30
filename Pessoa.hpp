@@ -2,7 +2,7 @@
 #define PESSOA_HPP
 
 #include <string>
-#include "material.hpp"  // INCLUIR DIRETAMENTE em vez de declaração antecipada
+#include "material.hpp"
 
 class Pessoa {
 private:
@@ -12,7 +12,7 @@ private:
     Material* _material;
 
 public:
-    Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material);
+    Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material = nullptr);
     ~Pessoa();
     
     std::string getNome() const;
@@ -22,10 +22,11 @@ public:
     
     void setNome(std::string nome);
     void setEndereco(std::string endereco);
+    void setCpf(std::string cpf);           // <<< ADICIONADO
     void setMaterial(Material* material);
     
     void definirMaterial(Material* mat, float p, int t);
-    virtual void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material)=0;
+    virtual void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) = 0;
 };
 
 #endif

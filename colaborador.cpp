@@ -2,73 +2,46 @@
 #include <iostream>
 #include <fstream>
 
-Colaborador::Colaborador(const Pessoa& pessoa) 
-    : Pessoa(pessoa), 
-      pontos(0) { }
+Colaborador::Colaborador(const Pessoa& pessoa) : Pessoa(pessoa), pontos(0) {}
+Colaborador::Colaborador(std::string nome, std::string endereco, std::string cpf, Material* material)
+    : Pessoa(nome, endereco, cpf, material), pontos(0) {}
 
-int Colaborador::getPontos() const {
-    return this->pontos;
-}
+Colaborador::~Colaborador() {}
 
-void Colaborador::setPontos(int pontos) {
-    this->pontos = pontos;
-}
-
-Colaborador::~Colaborador() { }
+int Colaborador::getPontos() const { return pontos; }
+void Colaborador::setPontos(int p) { pontos = p; }
 
 void Colaborador::cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) {
-    // CORRIGIDO: usar método base com ponteiro
-    Pessoa::cadastro(nome, endereco, cpf, material);
-    
-    std::ofstream arquivo("cadastro_colaborador.txt", std::ios::app);
-    
-    try {
-        if (!arquivo.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo de cadastro.");
-        }
-    }
-    catch (const std::ios_base::failure& e) {
-        std::cerr << e.what() << std::endl;
+    setNome(nome);
+    setEndereco(endereco);
+    setCpf(cpf);
+    setMaterial(material);
+
+    std::ofstream arq("cadastro_colaborador.txt", std::ios::app);
+    if (!arq.is_open()) {
+        std::cerr << "Erro ao salvar cadastro do colaborador.\n";
         return;
     }
-    
-    arquivo << "Nome: " << nome << std::endl;
-    arquivo << "Endereço: " << endereco << std::endl;
-    arquivo << "CPF: " << cpf << std::endl;
-    if (material) {
-        arquivo << "Material - Peso: " << material->getPeso() << ", Tipo: " << material->getTipo() << std::endl;
-    } else {
-        arquivo << "Material: Nulo" << std::endl;
-    }
-    arquivo << "Pontos: " << pontos << std::endl;
-    arquivo << "------------------------" << std::endl;
-
-    arquivo.close();
-    
-    std::cout << "Colaborador cadastrado com sucesso!" << std::endl;
+    arq << "Nome: " << nome << "\nEndereço: " << endereco << "\nCPF: " << cpf << "\n";
+    if (material) arq << "Material: " << material->getPeso() << "kg (tipo " << material->getTipo() << ")\n";
+    arq << "Pontos: " << pontos << "\n------------------------\n";
+    arq.close();
+    std::cout << "Colaborador cadastrado com sucesso!\n";
 }
 
-void Colaborador::receberPontos(int pontosRecebidos) {
-    Material* material = this->getMaterial();
-
-    if (material->getPeso() < 0) {
-        std::cout << "Peso do material inválido para receber pontos." << std::endl;
+void Colaborador::receberPontos(int pontosBase) {
+    Material* m = getMaterial();
+    if (!m || m->getPeso() <= 0) {
+        std::cout << "Sem material válido para calcular pontos.\n";
         return;
     }
-    switch (material->getTipo()) {
-        case 1: // Tipo 1
-            pontosRecebidos *= 2;
-            break;
-        case 2: // Tipo 2
-            pontosRecebidos *= 3;
-            break;
-        case 3: // Tipo 3
-            pontosRecebidos *= 5;
-            break;
-        default:
-            std::cout << "Tipo de material desconhecido. Nenhum ponto recebido." << std::endl;
-            pontosRecebidos = 0;
-            break;
+    int mult = 1;
+    switch (m->getTipo()) {
+        case 1: mult = 2; break;
+        case 2: mult = 3; break;
+        case 3: mult = 5; break;
     }
-    this->pontos += pontosRecebidos/(material->getPeso()/10);
+    float bonus = pontosBase * mult * (10.0f / m->getPeso());
+    pontos += static_cast<int>(bonus + 0.5f);
+    std::cout << "Pontos recebidos! Total: " << pontos << "\n";
 }

@@ -1,0 +1,6 @@
+*.o
+programa
+*.exe
+/build
+/dist
+

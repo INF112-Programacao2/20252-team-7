@@ -3,47 +3,49 @@
 #include <fstream>
 #include "material.hpp"
 
-// Construtor
+// === CONSTRUTOR POR CÓPIA (já existia) ===
 Catador::Catador(const Pessoa& pessoa) 
     : Pessoa(pessoa), 
       _saldo(0.0f) {}
 
+// === NOVO CONSTRUTOR COMPLETO (agora no lugar certo!) ===
+Catador::Catador(std::string nome, std::string endereco, std::string cpf, Material* material)
+    : Pessoa(nome, endereco, cpf, material), _saldo(0.0f) {}
+
 // Destrutor
 Catador::~Catador() { }
 
-// Getter
+// Getter e Setter
 float Catador::getSaldo() const {
     return _saldo;
 }
 
-// Setter
 void Catador::setSaldo(float valor) {
     _saldo = valor;
 }
 
-// Outras funções - CORRIGIDAS para usar ponteiros
 void Catador::recolherMaterial(Material* material) {
     if (material && this->getMaterial()) {
         float pesoAtual = this->getMaterial()->getPeso();
         float novoPeso = pesoAtual + material->getPeso();
         this->getMaterial()->setPeso(novoPeso);
         std::cout << "Material recolhido! Novo peso: " << novoPeso << "kg" << std::endl;
+    } else {
+        std::cout << "Erro ao recolher material." << std::endl;
     }
 }
 
+// === FUNÇÃO CADASTRO (agora limpa e correta) ===
 void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) {
-    // CORRIGIDO: usar método base com ponteiro
-    Pessoa::cadastro(nome, endereco, cpf, material);
-    
+    Pessoa::setNome(nome);
+    Pessoa::setEndereco(endereco);
+    Pessoa::setCpf(cpf);
+    Pessoa::setMaterial(material);
+
     std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
     
-    try {
-        if (!arquivo.is_open()) {
-            throw std::ios_base::failure("Erro ao abrir o arquivo de cadastro.");
-        }
-    }
-    catch (const std::ios_base::failure& e) {
-        std::cerr << e.what() << std::endl;
+    if (!arquivo.is_open()) {
+        std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
         return;
     }
     
@@ -51,11 +53,12 @@ void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, 
     arquivo << "Endereço: " << endereco << std::endl;
     arquivo << "CPF: " << cpf << std::endl;
     if (material) {
-        arquivo << "Material - Peso: " << material->getPeso() << ", Tipo: " << material->getTipo() << std::endl;
+        arquivo << "Material - Peso: " << material->getPeso() 
+                << ", Tipo: " << material->getTipo() << std::endl;
     } else {
         arquivo << "Material: Nulo" << std::endl;
     }
-    arquivo << "Saldo: " << _saldo << std::endl;
+    arquivo << "Saldo: R$ " << _saldo << std::endl;
     arquivo << "------------------------" << std::endl;
 
     arquivo.close();
