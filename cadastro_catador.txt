@@ -1,0 +1,18 @@
+Nome: Maria Oliveira
+Endereço: Rua A, 123
+CPF: 987.654.321-00
+Material - Peso: 20, Tipo: 2
+Saldo: R$ 107.3
+------------------------
+Nome: 
+Endereço: 2
+CPF: 2
+Material - Peso: 2, Tipo: 2
+Saldo: R$ 0
+------------------------
+Nome: fdskhfjh
+Endereço: sdsadsd
+CPF: 70000269603
+Material - Peso: 12, Tipo: 1
+Saldo: R$ 0
+------------------------
