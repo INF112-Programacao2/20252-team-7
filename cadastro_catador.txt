@@ -40,3 +40,9 @@ CPF: 26208784620
 Material: Nenhum (Cadastro Inicial)
 Saldo: R$ 0
 ------------------------
+Nome: Teste111
+Endereço: Rua Oh Glória
+CPF: 12345678904
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 0
+------------------------

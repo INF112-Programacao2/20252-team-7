@@ -19,7 +19,6 @@ void Validacao::validarCPF(std::string cpf)
         throw std::invalid_argument("CPF deve conter 11 digitos.");
     }
 
-    // Verifica digitos iguais
     bool todosIguais = true;
     for (size_t i = 1; i < cpf.length(); i++)
     {
@@ -28,26 +27,8 @@ void Validacao::validarCPF(std::string cpf)
     }
     if (todosIguais)
         throw std::invalid_argument("CPF invalido (digitos iguais).");
-
-    // Digitos verificadores
-    int soma = 0;
-    for (int i = 0; i < 9; i++)
-        soma += (cpf[i] - '0') * (10 - i);
-    int primeiro = 11 - (soma % 11);
-    if (primeiro >= 10)
-        primeiro = 0;
-    if (primeiro != (cpf[9] - '0'))
-        throw std::invalid_argument("CPF invalido.");
-
-    soma = 0;
-    for (int i = 0; i < 10; i++)
-        soma += (cpf[i] - '0') * (11 - i);
-    int segundo = 11 - (soma % 11);
-    if (segundo >= 10)
-        segundo = 0;
-    if (segundo != (cpf[10] - '0'))
-        throw std::invalid_argument("CPF invalido.");
 }
+
 void Validacao::validarTipoMaterial(int tipo)
 {
     if (tipo < 1 || tipo > 3)
@@ -65,24 +46,16 @@ void Validacao::validarCNPJ(std::string cnpj)
         throw std::invalid_argument("CNPJ deve conter 14 digitos.");
     }
 
-    int pesos1[12] = {5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
-    int soma = 0;
-    for (int i = 0; i < 12; i++)
-        soma += (cnpj[i] - '0') * pesos1[i];
-    int d1 = soma % 11;
-    d1 = (d1 < 2) ? 0 : 11 - d1;
-    if (d1 != (cnpj[12] - '0'))
-        throw std::invalid_argument("CNPJ invalido.");
-
-    int pesos2[13] = {6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
-    soma = 0;
-    for (int i = 0; i < 13; i++)
-        soma += (cnpj[i] - '0') * pesos2[i];
-    int d2 = soma % 11;
-    d2 = (d2 < 2) ? 0 : 11 - d2;
-    if (d2 != (cnpj[13] - '0'))
-        throw std::invalid_argument("CNPJ invalido.");
+    bool todosIguais = true;
+    for (size_t i = 1; i < cnpj.length(); i++)
+    {
+        if (cnpj[i] != cnpj[0])
+            todosIguais = false;
+    }
+    if (todosIguais)
+        throw std::invalid_argument("CNPJ invalido (digitos iguais).");
 }
+
 void Validacao::validarEndereco(std::string endereco) {
     // 1. Verificação de tamanho mínimo
     if (endereco.length() < 3) {
