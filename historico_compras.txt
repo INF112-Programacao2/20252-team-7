@@ -10,3 +10,6 @@ Coop 11222333000181 pagou R$ 200.00 por 1000.00kg de Papel ao catador Gabriel
 Coop 11222333000181 pagou R$ 500.00 por 1000.00kg de Plastico ao catador joao
 Coop 11222333000181 pagou R$ 1195.00 por 239.00kg de Metal ao CPF 70228121604
 Coop 11222333000181 pagou R$ 5.00 por 10.00kg de Plastico ao CPF 70228121604
+Coop 11222333000181 pagou R$ 5000.00 por 10000.00kg de Plastico ao CPF 70228121604
+Coop 11222333000181 pagou R$ 4995.00 por 999.00kg de Metal ao CPF 70228121604
+Coop 11222333000181 pagou R$ 5000.00 por 1000.00kg de Metal ao CPF 70228121604

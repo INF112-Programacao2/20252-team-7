@@ -20,7 +20,9 @@ Nome: Gabriel
 Endereço: Ban
 CPF: 70228121604
 Material: 98kg (tipo 3)
-Pontos: 4292
+Material: 1089.00kg de Metal
+Material: 100.00kg de Plastico
+Pontos: 8948
 ------------------------
 Nome: Jessica
 Endereço: dajosdojsadjosadjasjdasjoajo
