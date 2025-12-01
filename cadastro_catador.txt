@@ -10,3 +10,33 @@ CPF: 2
 Material - Peso: 2, Tipo: 2
 Saldo: R$ 0
 ------------------------
+Nome: Gabriel
+Endereço: Jasmim
+CPF: 70228121604
+Material: 98kg (tipo 1)
+Saldo: R$ 1900.000000
+------------------------
+Nome: GAbriel
+Endereço: sabao
+CPF: 00973038608
+Material: 98kg (tipo 3)
+Saldo: R$ 0
+------------------------
+Nome: Moises
+Endereço: Rua Tulipa
+CPF: 50138766649
+Material: 34kg de Metal
+Saldo: R$ 0
+------------------------
+Nome: Aldair
+Endereço: Rua jasmim
+CPF: 04281554645
+Material: Nulo
+Saldo: R$ 0
+------------------------
+Nome: Luiz
+Endereço: Passos de Minas
+CPF: 26208784620
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 0
+------------------------

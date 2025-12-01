@@ -13,7 +13,7 @@ private:
 
 public:
     Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material = nullptr);
-    ~Pessoa();
+    virtual ~Pessoa(); // Virtual para garantir destruição correta nas classes filhas
     
     std::string getNome() const;
     std::string getEndereco() const;
@@ -25,14 +25,6 @@ public:
     void setCpf(std::string cpf);
     void setMaterial(Material* material);
     
-    
-    
-    
     void definirMaterial(Material* mat, float p, int t);
-    // REMOVIDA a linha problemática: virtual void cadastro(...) = 0;
-
-    
-
 };
-
 #endif

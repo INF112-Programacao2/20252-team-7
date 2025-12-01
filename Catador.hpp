@@ -19,6 +19,8 @@ public:
     // NOVOS MÉTODOS
     void visualizarCooperativas();
     void visualizarColaboradores();
+    // Procura o CPF deste catador no arquivo e soma o valor ao saldo existente
+    void adicionarSaldoAoArquivo(float valorAdicionado);
 };
 
 #endif

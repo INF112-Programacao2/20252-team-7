@@ -1,113 +1,115 @@
 #include "Catador.hpp"
 #include <iostream>
 #include <fstream>
-#include "material.hpp"
+#include <vector>
+#include <string>
 
-// === CONSTRUTOR POR CÓPIA (já existia) ===
-Catador::Catador(const Pessoa& pessoa) 
-    : Pessoa(pessoa), 
-      _saldo(0.0f) {}
+// Construtor de Cópia
+Catador::Catador(const Pessoa& pessoa) : Pessoa(pessoa), _saldo(0.0f) {}
 
-// === NOVO CONSTRUTOR COMPLETO (agora no lugar certo!) ===
+// Construtor Padrão
 Catador::Catador(std::string nome, std::string endereco, std::string cpf, Material* material)
     : Pessoa(nome, endereco, cpf, material), _saldo(0.0f) {}
 
-// Destrutor
-Catador::~Catador() { }
+Catador::~Catador() {}
 
-// Getter e Setter
-float Catador::getSaldo() const {
-    return _saldo;
-}
-
-void Catador::setSaldo(float valor) {
-    _saldo = valor;
-}
+float Catador::getSaldo() const { return _saldo; }
+void Catador::setSaldo(float valor) { _saldo = valor; }
 
 void Catador::recolherMaterial(Material* material) {
     if (material && this->getMaterial()) {
-        float pesoAtual = this->getMaterial()->getPeso();
-        float novoPeso = pesoAtual + material->getPeso();
+        float novoPeso = this->getMaterial()->getPeso() + material->getPeso();
         this->getMaterial()->setPeso(novoPeso);
-        std::cout << "Material recolhido! Novo peso: " << novoPeso << "kg" << std::endl;
-    } else {
-        std::cout << "Erro ao recolher material." << std::endl;
+        std::cout << "Material recolhido! Novo peso: " << novoPeso << "kg\n";
     }
 }
 
-// === FUNÇÃO CADASTRO (agora limpa e correta) ===
+// === CADASTRO ATUALIZADO (Sem exigir material inicial) ===
 void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) {
-    Pessoa::setNome(nome);
-    Pessoa::setEndereco(endereco);
-    Pessoa::setCpf(cpf);
-    Pessoa::setMaterial(material);
-
     std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
-    
-    if (!arquivo.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
-        return;
+    if (arquivo.is_open()) {
+        arquivo << "Nome: " << nome << "\nEndereço: " << endereco << "\nCPF: " << cpf << "\n";
+        
+        if (material) {
+            arquivo << "Material: " << material->getPeso() << "kg de " << material->getNomeTipo() << "\n";
+        } else {
+            arquivo << "Material: Nenhum (Cadastro Inicial)\n";
+        }
+        
+        arquivo << "Saldo: R$ " << _saldo << "\n------------------------\n";
+        arquivo.close();
+        std::cout << "Catador cadastrado com sucesso!\n";
     }
-    
-    arquivo << "Nome: " << nome << std::endl;
-    arquivo << "Endereço: " << endereco << std::endl;
-    arquivo << "CPF: " << cpf << std::endl;
-    if (material) {
-        arquivo << "Material - Peso: " << material->getPeso() 
-                << ", Tipo: " << material->getTipo() << std::endl;
-    } else {
-        arquivo << "Material: Nulo" << std::endl;
-    }
-    arquivo << "Saldo: R$ " << _saldo << std::endl;
-    arquivo << "------------------------" << std::endl;
-
-    arquivo.close();
-    
-    std::cout << "Catador cadastrado com sucesso!" << std::endl;
 }
-
-// ... (mantenha todo o código existente e adicione estas funções no final)
 
 void Catador::visualizarCooperativas() {
-    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
+    std::cout << "\n=== COOPERATIVAS DISPONIVEIS ===\n";
     std::ifstream arquivo("cadastro_cooperativa.txt");
     std::string linha;
-    
-    if (!arquivo.is_open()) {
-        std::cout << "Nenhuma cooperativa cadastrada.\n";
-        return;
+    if (arquivo.is_open()) {
+        while (std::getline(arquivo, linha)) std::cout << linha << "\n";
+        arquivo.close();
     }
-    
-    while (std::getline(arquivo, linha)) {
-        std::cout << linha << std::endl;
-    }
-    arquivo.close();
 }
 
-void Catador::visualizarColaboradores() {
-    std::cout << "\n=== COLABORADORES PARA COLETA ===\n";
-    std::ifstream arquivo("cadastro_colaborador.txt");
+// === LÓGICA DE SALDO PERSISTENTE (Edita o arquivo TXT) ===
+void Catador::adicionarSaldoAoArquivo(float valorAdicionado) {
+    std::ifstream leitura("cadastro_catador.txt");
+    std::vector<std::string> linhas;
     std::string linha;
     
-    if (!arquivo.is_open()) {
-        std::cout << "Nenhum colaborador cadastrado.\n";
+    std::string cpfAlvo = "CPF: " + this->getCpf();
+    bool encontrouUsuario = false;
+    bool saldoAtualizado = false;
+
+    if (!leitura.is_open()) {
+        std::cout << "Erro: Base de dados de catadores nao encontrada.\n";
         return;
     }
-    
-    std::string nome, endereco, materialInfo;
-    while (std::getline(arquivo, linha)) {
-        if (linha.find("Nome: ") == 0) {
-            nome = linha.substr(6);
-        } else if (linha.find("Endereço: ") == 0) {
-            endereco = linha.substr(10);
-        } else if (linha.find("Material: ") == 0) {
-            materialInfo = linha.substr(10);
-            // Exibir informações consolidadas
-            std::cout << "Colaborador: " << nome << std::endl;
-            std::cout << "Endereço: " << endereco << std::endl;
-            std::cout << "Material: " << materialInfo << std::endl;
-            std::cout << "------------------------" << std::endl;
+
+    // 1. Lê todo o arquivo para a memória
+    while (std::getline(leitura, linha)) {
+        // Verifica se achou o usuário pelo CPF
+        if (linha.find(cpfAlvo) != std::string::npos) {
+            encontrouUsuario = true;
+        }
+
+        // Se estamos no bloco do usuário certo e achamos a linha de Saldo
+        if (encontrouUsuario && linha.find("Saldo: R$ ") != std::string::npos && !saldoAtualizado) {
+            try {
+                // Pega o valor antigo e soma
+                float saldoAntigo = std::stof(linha.substr(10));
+                float novoSaldo = saldoAntigo + valorAdicionado;
+                
+                // Cria a nova linha
+                std::string novaLinha = "Saldo: R$ " + std::to_string(novoSaldo);
+                linhas.push_back(novaLinha);
+                
+                // Atualiza o objeto na memória
+                this->_saldo = novoSaldo;
+                saldoAtualizado = true; // Impede que altere saldos de outros usuários
+            } catch (...) {
+                linhas.push_back(linha); // Se der erro, mantém original
+            }
+        } 
+        else if (linha.find("------------------------") != std::string::npos) {
+            // Fim do bloco deste usuário
+            if (encontrouUsuario) {
+                encontrouUsuario = false;
+                saldoAtualizado = false;
+            }
+            linhas.push_back(linha);
+        }
+        else {
+            linhas.push_back(linha); // Copia as outras linhas
         }
     }
-    arquivo.close();
+    leitura.close();
+
+    // 2. Reescreve o arquivo com o saldo atualizado
+    std::ofstream escrita("cadastro_catador.txt");
+    for (const auto& l : linhas) {
+        escrita << l << "\n";
+    }
+    escrita.close();
 }

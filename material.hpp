@@ -1,5 +1,6 @@
 #ifndef MATERIAL_HPP
 #define MATERIAL_HPP
+#include <string>
 
 class Material {
 private:
@@ -15,6 +16,7 @@ public:
 	float getPeso();
 	int getTipo();
 	void setPeso(float);
+	std::string getNomeTipo();
 	void setTipo(int);
 };
 

@@ -5,38 +5,44 @@
 
 class Material;
 class Catador;
-class Colaborador;
 
 class Cooperativas {
 private:
-    float preco;
+    float precoPlastico;
+    float precoPapel;
+    float precoMetal;
+    
     std::string cnpj;
     std::string endereco;
     Material* material;
     
 public:
     Cooperativas();
-    Cooperativas(float, std::string, std::string, Material*);
+    Cooperativas(float pPlastico, float pPapel, float pMetal, std::string cnpj, std::string endereco, Material* material);
     ~Cooperativas();
 
-    float getPreco();
+    float getPrecoPlastico();
+    float getPrecoPapel();
+    float getPrecoMetal();
+    
+    void setPrecos(float plastico, float papel, float metal);
+    
     std::string getCnpj();
     std::string getEndereco();
     Material* getMaterial();
-    void setPreco(float);
     void setCnpj(std::string);
     void setEndereco(std::string);
     void setMaterial(Material*);
 
-    void comprarMaterial(Catador& catador, float peso, float precoPorKg);
-    void calcularPreco(float peso, float precoPorKg);
-    void consultarPrecoCooperativa();
-    void relatorio();
-    void cadastro(float preco, std::string endereco, std::string cnpj, Material* material);
+    void comprarMaterial(Catador& catador, float peso);
+    void cadastro(float pPlastico, float pPapel, float pMetal, std::string endereco, std::string cnpj, Material* material);
     
-    // NOVOS MÉTODOS
     void relatorioMaterialComprado();
-    void registrarCompra(const std::string& nomeCatador, float peso, float precoKg);
+    
+    // MUDANÇA: Parâmetro agora representa o CPF
+    void registrarCompra(const std::string& cpfCatador, float peso, float valorTotal, std::string nomeMaterial);
+    
+    void gerarRelatorioEstatistico(); 
     void visualizarCooperativas();
 };
 

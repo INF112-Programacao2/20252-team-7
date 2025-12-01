@@ -1,6 +1,8 @@
 #include "colaborador.hpp"
 #include <iostream>
 #include <fstream>
+#include <vector>
+#include <sstream>
 
 Colaborador::Colaborador(const Pessoa& pessoa) : Pessoa(pessoa), pontos(0) {}
 Colaborador::Colaborador(std::string nome, std::string endereco, std::string cpf, Material* material)
@@ -12,54 +14,115 @@ int Colaborador::getPontos() const { return pontos; }
 void Colaborador::setPontos(int p) { pontos = p; }
 
 void Colaborador::cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) {
-    setNome(nome);
-    setEndereco(endereco);
-    setCpf(cpf);
-    setMaterial(material);
-
     std::ofstream arq("cadastro_colaborador.txt", std::ios::app);
-    if (!arq.is_open()) {
-        std::cerr << "Erro ao salvar cadastro do colaborador.\n";
-        return;
+    if (arq.is_open()) {
+        arq << "Nome: " << nome << "\nEndereço: " << endereco << "\nCPF: " << cpf << "\n";
+        if (material) arq << "Material: " << material->getPeso() << "kg de " << material->getNomeTipo() << "\n";
+        arq << "Pontos: 0\n------------------------\n";
+        arq.close();
+        std::cout << "Colaborador cadastrado!\n";
     }
-    arq << "Nome: " << nome << "\nEndereço: " << endereco << "\nCPF: " << cpf << "\n";
-    if (material) arq << "Material: " << material->getPeso() << "kg (tipo " << material->getTipo() << ")\n";
-    arq << "Pontos: " << pontos << "\n------------------------\n";
-    arq.close();
-    std::cout << "Colaborador cadastrado com sucesso!\n";
 }
 
-void Colaborador::receberPontos(int pontosBase) {
-    Material* m = getMaterial();
-    if (!m || m->getPeso() <= 0) {
-        std::cout << "Sem material válido para calcular pontos.\n";
-        return;
-    }
-    int mult = 1;
+// Doação de Material (Usa multiplicador)
+void Colaborador::realizarDoacao(Material* m) {
+    if (!m || m->getPeso() <= 0) return;
+
+    int multiplicador = 0;
     switch (m->getTipo()) {
-        case 1: mult = 2; break;
-        case 2: mult = 3; break;
-        case 3: mult = 5; break;
+        case 1: multiplicador = 3; break; // Plastico
+        case 2: multiplicador = 2; break; // Papel
+        case 3: multiplicador = 4; break; // Metal
+        default: multiplicador = 1; break;
     }
-    float bonus = pontosBase * mult * (10.0f / m->getPeso());
-    pontos += static_cast<int>(bonus + 0.5f);
-    std::cout << "Pontos recebidos! Total: " << pontos << "\n";
+
+    int pontosGanhos = static_cast<int>(m->getPeso() * multiplicador);
+    this->pontos += pontosGanhos;
+    
+    std::cout << "\n=== DOACAO REALIZADA ===\n";
+    std::cout << "Material: " << m->getNomeTipo() << " (" << m->getPeso() << "kg)\n";
+    std::cout << "Pontos ganhos: " << pontosGanhos << "\n";
+    
+    salvarPontosNoArquivo();
 }
 
-// ... (mantenha todo o código existente e adicione esta função no final)
+// [CORREÇÃO] Doação de Valor Fixo (Bônus)
+void Colaborador::receberPontos(int valor) {
+    this->pontos += valor;
+    std::cout << ">> Bonus recebido: +" << valor << " pontos!\n";
+    salvarPontosNoArquivo();
+}
 
-void Colaborador::visualizarCooperativas() {
-    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
-    std::ifstream arquivo("cadastro_cooperativa.txt");
+// === PERSISTÊNCIA ===
+void Colaborador::carregarPontos() {
+    std::ifstream arquivo("cadastro_colaborador.txt");
     std::string linha;
-    
-    if (!arquivo.is_open()) {
-        std::cout << "Nenhuma cooperativa cadastrada.\n";
-        return;
-    }
-    
+    std::string cpfAlvo = "CPF: " + this->getCpf();
+    bool encontrouUsuario = false;
+
+    if (!arquivo.is_open()) return;
+
     while (std::getline(arquivo, linha)) {
-        std::cout << linha << std::endl;
+        if (linha.find(cpfAlvo) != std::string::npos) {
+            encontrouUsuario = true;
+        }
+        if (encontrouUsuario && linha.find("Pontos: ") != std::string::npos) {
+            try {
+                this->pontos = std::stoi(linha.substr(8));
+            } catch (...) {
+                this->pontos = 0;
+            }
+            break;
+        }
+        if (encontrouUsuario && linha.find("------------------------") != std::string::npos) {
+            break;
+        }
     }
     arquivo.close();
+}
+
+void Colaborador::salvarPontosNoArquivo() {
+    std::ifstream leitura("cadastro_colaborador.txt");
+    std::vector<std::string> linhas;
+    std::string linha;
+    std::string cpfAlvo = "CPF: " + this->getCpf();
+    bool usuarioAtual = false;
+    bool atualizado = false;
+
+    if (!leitura.is_open()) return;
+
+    while (std::getline(leitura, linha)) {
+        if (linha.find(cpfAlvo) != std::string::npos) {
+            usuarioAtual = true;
+        }
+        
+        if (usuarioAtual && linha.find("Pontos: ") != std::string::npos && !atualizado) {
+            linhas.push_back("Pontos: " + std::to_string(this->pontos));
+            atualizado = true;
+        } 
+        else if (linha.find("------------------------") != std::string::npos) {
+            usuarioAtual = false;
+            linhas.push_back(linha);
+        } 
+        else {
+            linhas.push_back(linha);
+        }
+    }
+    leitura.close();
+
+    std::ofstream escrita("cadastro_colaborador.txt");
+    for (const auto& l : linhas) {
+        escrita << l << "\n";
+    }
+    escrita.close();
+}
+
+void Colaborador::visualizarCooperativas() {
+    std::cout << "\n=== COOPERATIVAS ===\n";
+    std::ifstream arquivo("cadastro_cooperativa.txt");
+    std::string linha;
+    if (arquivo.is_open()) {
+        while (std::getline(arquivo, linha)) std::cout << linha << "\n";
+        arquivo.close();
+    }
 }

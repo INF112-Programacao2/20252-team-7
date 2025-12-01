@@ -1,20 +1,23 @@
-// InputHandler.hpp
 #ifndef INPUTHANDLER_HPP
 #define INPUTHANDLER_HPP
 
-#include <iostream>
 #include <string>
-#include <limits>
+#include <iostream>
 
 class InputHandler {
 public:
+    // Funções genéricas
     static int getInt(const std::string& prompt);
     static float getFloat(const std::string& prompt);
     static std::string getString(const std::string& prompt);
     
-    // Novas funções para CPF e CNPJ
+    // Funções com validação específica
     static std::string getCPF(const std::string& prompt);
     static std::string getCNPJ(const std::string& prompt);
+    static int getTipoMaterial(const std::string& prompt);
+    
+    // O novo método de endereço
+    static std::string getEndereco(const std::string& prompt);
 };
 
 #endif

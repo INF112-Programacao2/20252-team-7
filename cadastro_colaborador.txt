@@ -16,3 +16,20 @@ CPF: 345.678-98
 Material: 12kg (tipo 34)
 Pontos: 0
 ------------------------
+Nome: Gabriel
+Endereço: Ban
+CPF: 70228121604
+Material: 98kg (tipo 3)
+Pontos: 4292
+------------------------
+Nome: Jessica
+Endereço: dajosdojsadjosadjasjdasjoajo
+CPF: 50138766649
+Material: 982kg (tipo 2)
+Pontos: 348
+------------------------
+Nome: Joana
+Endereço: Rua JK 879
+CPF: 42335388649
+Pontos: 300
+------------------------
