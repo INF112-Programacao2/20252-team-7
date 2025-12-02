@@ -2,3 +2,7 @@ CNPJ: 12345678900321
 Endereco: Rua Caio Souza, Av. JK, 10
 Precos - Plastico: R$10 | Papel: R$5 | Metal: R$20
 ------------------------
+CNPJ: 11222333000181
+Endereco: UFV, Vicosa
+Precos - Plastico: R$8 | Papel: R$10 | Metal: R$20
+------------------------

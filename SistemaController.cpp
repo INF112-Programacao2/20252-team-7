@@ -252,7 +252,6 @@ void SistemaController::menuColaborador() {
 void SistemaController::menuCooperativa() {
     int opInicial;
     do {
-        // Lógica de Login/Cadastro similar
         std::cout << "\n--- MENU COOPERATIVA ---\n";
         std::cout << "1. Entrar (Login)\n";
         std::cout << "2. Cadastrar Nova Cooperativa\n";
@@ -287,8 +286,13 @@ void SistemaController::menuCooperativa() {
         if (!cnpjLogado.empty()) {
             Cooperativas coop;
             coop.setCnpj(cnpjLogado);
-            coop.setEndereco("Sede"); 
-            coop.setPrecos(0.5, 0.2, 5.0); // Simulação de sessão
+            coop.carregarDados(); // Carrega preços do arquivo
+
+            // Exibe os preços carregados
+            std::cout << "\n[Sessao Iniciada] Precos Atuais:\n";
+            std::cout << "Plastico: R$" << coop.getPrecoPlastico() 
+                      << " | Papel: R$" << coop.getPrecoPapel() 
+                      << " | Metal: R$" << coop.getPrecoMetal() << "\n";
 
             int op;
             do {
@@ -302,37 +306,31 @@ void SistemaController::menuCooperativa() {
                 
                 if(op == 1) coop.relatorioMaterialComprado();
                 else if(op == 2) {
-                    // Lógica de Compra e Pagamento Automático
                     std::cout << "\n--- REGISTRAR COMPRA ---\n";
                     std::string cpfCatador = InputHandler::getCPF("CPF do Catador: ");
                     
                     if (!catadorExiste(cpfCatador)) {
                         std::cout << ">> Erro: Catador nao encontrado! Cadastre-o primeiro.\n";
                     } else {
-                        // Coleta dados
                         int t = InputHandler::getTipoMaterial("Material recebido: ");
                         float peso = InputHandler::getFloat("Peso (kg): ");
                         
-                        // Define preço
+                        // Define preço baseado no que foi carregado do arquivo
                         float precoKg = 0;
                         if(t == 1) precoKg = coop.getPrecoPlastico();
                         else if(t == 2) precoKg = coop.getPrecoPapel();
                         else if(t == 3) precoKg = coop.getPrecoMetal();
                         
                         float total = peso * precoKg;
-                        // Criamos um objeto temporário representando o Catador.
-                        // Usamos o CPF dele para encontrar o registro no arquivo.
-                        Catador c("", "N/A", cpfCatador, nullptr);
                         
-                        // Chama função que edita o arquivo 'cadastro_catador.txt'
-                        // injetando o dinheiro no saldo dele.
+                        // Atualiza o arquivo do catador
+                        Catador c("", "N/A", cpfCatador, nullptr);
                         c.adicionarSaldoAoArquivo(total);
                         
-                        // Registra no histórico da cooperativa
                         std::string nomeMat = (t==1) ? "Plastico" : (t==2) ? "Papel" : "Metal";
                         coop.registrarCompra(cpfCatador, peso, total, nomeMat);
                         
-                        std::cout << ">> SUCESSO! R$ " << total << " creditados para o CPF " << cpfCatador << ".\n";
+                        std::cout << ">> SUCESSO! R$ " << total << " pagos ao CPF " << cpfCatador << ".\n";
                     }
                 }
                 else if(op == 3) coop.gerarRelatorioEstatistico();

@@ -127,9 +127,61 @@ void Cooperativas::cadastro(float pPlastico, float pPapel, float pMetal, std::st
         std::cout << "Cooperativa cadastrada com sucesso!\n";
     }
 }
+// === Vefifica os dados reais do arquivo, separando por cooperativa ===
+void Cooperativas::carregarDados() {
+    std::ifstream arquivo("cadastro_cooperativa.txt");
+    std::string linha;
+    bool encontrou = false;
+    
+    if (!arquivo.is_open()) return;
+
+    while (std::getline(arquivo, linha)) {
+        // Procura o CNPJ
+        if (linha.find("CNPJ: " + this->cnpj) != std::string::npos) {
+            encontrou = true;
+        }
+        
+        if (encontrou) {
+            // Lê Endereço
+            if (linha.find("Endereco: ") != std::string::npos) {
+                this->endereco = linha.substr(10);
+            }
+            
+            // Lê Preços
+            if (linha.find("Precos -") != std::string::npos) {
+                try {
+                    // Extrai Plastico
+                    size_t posPlast = linha.find("Plastico: R$");
+                    size_t posPipe1 = linha.find(" |", posPlast);
+                    std::string sPlast = linha.substr(posPlast + 12, posPipe1 - (posPlast + 12));
+                    this->precoPlastico = std::stof(sPlast);
+                    
+                    // Extrai Papel
+                    size_t posPapel = linha.find("Papel: R$");
+                    size_t posPipe2 = linha.find(" |", posPapel);
+                    std::string sPapel = linha.substr(posPapel + 9, posPipe2 - (posPapel + 9));
+                    this->precoPapel = std::stof(sPapel);
+                    
+                    // Extrai Metal
+                    size_t posMetal = linha.find("Metal: R$");
+                    std::string sMetal = linha.substr(posMetal + 9);
+                    this->precoMetal = std::stof(sMetal);
+                    
+                } catch (...) {
+                    // Valores padrão em caso de erro no arquivo
+                    this->precoPlastico = 0; this->precoPapel = 0; this->precoMetal = 0;
+                }
+            }
+            
+            // Se chegou na linha tracejada, acabou
+            if (linha.find("------------------------") != std::string::npos) break;
+        }
+    }
+    arquivo.close();
+}
 
 // ==================================================================================
-// PERSISTÊNCIA: RELATÓRIO COM FILTRO
+// RELATÓRIO COM FILTRO
 // ----------------------------------------------------------------------------------
 // [Lógica de Filtro]
 // Lê o arquivo 'historico_compras.txt' linha por linha, mas imprime na tela apenas
@@ -160,7 +212,7 @@ void Cooperativas::relatorioMaterialComprado() {
 }
 
 // ==================================================================================
-// PERSISTÊNCIA: REGISTRAR TRANSAÇÃO
+// REGISTRAR TRANSAÇÃO
 // ----------------------------------------------------------------------------------
 // Adiciona uma nova linha ao log de transações.
 // ==================================================================================
@@ -176,9 +228,8 @@ void Cooperativas::registrarCompra(const std::string& cpfCatador, float peso, fl
 }
 
 // ==================================================================================
-// RELATÓRIO ESTATÍSTICO (Parser e Agregação)
+// RELATÓRIO ESTATÍSTICO
 // ----------------------------------------------------------------------------------
-// [Lógica Avançada]
 // 1. Lê o arquivo de histórico.
 // 2. Filtra pelo CNPJ.
 // 3. Faz a extração dos números de peso de dentro do texto.

@@ -2,11 +2,11 @@ Nome: João da Costa
 Endereço: Rua Jardim Pérola, B. Jacarandá, 174
 CPF: 12345678901
 Material: Nenhum (Cadastro Inicial)
-Saldo: R$ 0
+Saldo: R$ 2000.000000
 ------------------------
 Nome: Gabriel Valerio
 Endereço: Centro, Vicosa 
 CPF: 70228121604
 Material: Nenhum (Cadastro Inicial)
-Saldo: R$ 0
+Saldo: R$ 325.000000
 ------------------------

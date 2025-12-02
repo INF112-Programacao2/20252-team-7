@@ -80,6 +80,9 @@ public:
     
     // Lista todas as cooperativas cadastradas no sistema.
     void visualizarCooperativas();
+
+    // Carrega preços e endereço do arquivo ao logar
+    void carregarDados();
 };
 
 #endif
