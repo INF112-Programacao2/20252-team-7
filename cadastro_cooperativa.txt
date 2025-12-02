@@ -1,8 +1,4 @@
-CNPJ: 15436940000448
-Endereco: Jasmim 876
-Precos - Plastico: R$0.65 | Papel: R$8.64 | Metal: R$15
-------------------------
-CNPJ: 11222333000181
-Endereco: Rua do Sabao
-Precos - Plastico: R$4 | Papel: R$3 | Metal: R$5
+CNPJ: 12345678900321
+Endereco: Rua Caio Souza, Av. JK, 10
+Precos - Plastico: R$10 | Papel: R$5 | Metal: R$20
 ------------------------
