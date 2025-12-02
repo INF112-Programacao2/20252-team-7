@@ -1,12 +1,20 @@
 # Sistema de Reciclagem - Documentação Completa
 
+                -I- EcoSystem - Sistema de Gestão de Reciclagem -I-
+Um sistema robusto desenvolvido em C++ para gerenciar o ciclo de vida da reciclagem, conectando Doadores (Colaboradores), Coletores (Catadores) e Centros de Processamento (Cooperativas). O projeto foca na persistência de dados, gamificação e controle financeiro.
+
+- Sobre o Projeto
+Este projeto simula um ecossistema de reciclagem sustentável. O objetivo é incentivar a coleta seletiva através de um sistema de Gamificação (pontos para quem doa) e garantir a remuneração justa e registrada para os catadores (saldo financeiro real pago pelas cooperativas).
+
+O sistema opera inteiramente via console, utilizando manipulação de arquivos (.txt) para garantir que nenhum dado (saldos, pontos, cadastros) seja perdido quando o programa é fechado.
+
 ## Nosso Trabalho
 
 Este é um sistema completo de gestão para cadeia de reciclagem que conecta três tipos de usuários:
-- **Colaboradores** - Doadores de materiais recicláveis
-- **Catadores** - Coletam e vendem materiais
-- **Cooperativas** - Compram materiais dos catadores
-- **Administrador** - Acompanha relatórios e estatísticas
+- *Colaboradores* - Doadores de materiais recicláveis
+- *Catadores* - Coletam e vendem materiais
+- *Cooperativas* - Compram materiais dos catadores
+- *Administrador* - Acompanha relatórios e estatísticas
 
 O sistema gerencia desde o cadastro de usuários até transações financeiras, com persistência em arquivos de texto.
 
@@ -14,7 +22,7 @@ O sistema gerencia desde o cadastro de usuários até transações financeiras, 
 
 ### Arquivos do Sistema
 
-**Código-fonte:**
+*Código-fonte:*
 main.cpp                - Ponto de entrada do programa
 SistemaController.hpp   - Controlador principal (cabeçalho)
 SistemaController.cpp   - Controlador principal (implementação)
@@ -37,7 +45,7 @@ administrador.cpp       - Classe Administrador (implementação)
 Makefile                - Script de compilação automática
 .gitignore              - Arquivos ignorados pelo Git
 
-**Arquivos de dados gerados (criados automaticamente):**
+*Arquivos de dados gerados (criados automaticamente):*
 cadastro_catador.txt          - Dados dos catadores e seus saldos
 cadastro_colaborador.txt      - Dados dos doadores e seus pontos
 cadastro_cooperativa.txt      - Dados das cooperativas
@@ -73,31 +81,32 @@ g++ -std=c++11 -o sistema *.cpp
 ## Funcionalidades por Tipo de Usuário
 
 ### COLABORADOR (Doador)
-- **Cadastro**: CPF único, nome, endereço
-- **Doação**: Registra entrega de materiais (Plástico, Papel, Metal)
-- **Pontuação**: Ganha pontos por doação (Plástico×3, Papel×2, Metal×4)
-- **Visualização**: Lista cooperativas disponíveis
-- **Extrato**: Consulta pontuação acumulada
+- *Cadastro*: CPF único, nome, endereço
+- *Doação*: Registra entrega de materiais (Plástico, Papel, Metal)
+- *Pontuação*: Ganha pontos por doação (Plástico×3, Papel×2, Metal×4)
+- *Visualização*: Lista cooperativas disponíveis
+- *Extrato*: Consulta pontuação acumulada
 
 ### CATADOR (Coletor)
-- **Cadastro**: CPF único, nome, endereço
-- **Saldo**: Controle financeiro das vendas
-- **Visualização**: Lista cooperativas para venda
-- **Transações**: Recebe pagamentos das cooperativas
-- **Histórico**: Consulta de vendas realizadas
+- *Cadastro*: CPF único, nome, endereço
+- *Saldo*: Controle financeiro das vendas
+- *Visualização*: Lista cooperativas para venda
+- *Transações*: Recebe pagamentos das cooperativas
+- *Histórico*: Consulta de vendas realizadas
 
 ### COOPERATIVA (Compradora)
-- **Cadastro**: CNPJ único, endereço, preços por material
-- **Compras**: Registra compra de materiais de catadores
-- **Pagamentos**: Transfere valor para saldo do catador
-- **Relatórios**: Estatísticas por tipo de material
-- **Histórico**: Consulta todas as transações (filtrado por CNPJ)
+- *Cadastro*: CNPJ único, endereço, preços por material
+- *Compras*: Registra compra de materiais de catadores
+- *Pagamentos*: Transfere valor para saldo do catador
+- *Relatórios*: Estatísticas por tipo de material
+- *Histórico*: Consulta todas as transações (filtrado por CNPJ)
 
 ### ADMINISTRADOR (Gestor)
-- **Visualização**: Lista todos os usuários cadastrados
-- **Ranking**: Ordena colaboradores por pontuação (maior para menor)
-- **Relatório Global**: Consolida dados de todo o sistema
+- *Visualização*: Lista todos os usuários cadastrados
+- *Ranking*: Ordena colaboradores por pontuação (maior para menor)
+- *Relatório Global*: Consolida dados de todo o sistema
 
+# 5. Funcionalidades 
 ## Menu Principal
 
 Ao executar o sistema, você verá:
@@ -111,50 +120,68 @@ Ao executar o sistema, você verá:
 
 ### Fluxo Típico de Uso
 
-1. **Cadastro de Usuários**:
+1. *Cadastro de Usuários*:
    - Cada tipo de usuário se cadastra com CPF/CNPJ único
    - Sistema valida formato e unicidade
 
-2. **Interações**:
+2. *Interações*:
    - Colaborador faz doação → ganha pontos
    - Catador coleta material → tem estoque
    - Cooperativa compra do catador → transfere dinheiro
 
-3. **Relatórios**:
+3. *Relatórios*:
    - Administrador gera ranking e estatísticas
    - Cooperativas veem histórico de compras
    - Todos os dados são persistidos em arquivos
 
-## Características Técnicas
+## Destaques Técnicos (Conceitos de POO e C++ aprendidos durante a disciplina)
+Este projeto foi construído para demonstrar domínio sobre conceitos avançados de programação aprendidos na disciplina de INF 112:
 
-### Validações Implementadas
-- CPF (11 dígitos, algoritmo de verificação)
-- CNPJ (14 dígitos, algoritmo de verificação)
-- Endereço (tamanho mínimo, presença de letras)
-- Tipo de material (1-3 apenas)
-- Unicidade de CPF/CNPJ no sistema
+### Orientação a Objetos
+.Herança: As classes Catador e Colaborador herdam da classe base Pessoa, reaproveitando atributos como Nome, CPF e Endereço.
 
-### Persistência de Dados
-- Todos os cadastros são salvos em arquivos .txt
-- Transações são registradas em historico_compras.txt
-- Pontuações e saldos são atualizados em tempo real
+.Polimorfismo: Uso de Destrutores Virtuais (virtual ~Pessoa()) para garantir que a memória seja limpa corretamente independentemente do tipo do objeto.
 
-### Gestão de Memória
-- Uso correto de new e delete para objetos dinâmicos
-- Destrutores virtuais para hierarquia de classes
-- Prevenção de vazamentos de memória
+.Encapsulamento: Atributos sensíveis (como _saldo e pontos) são private e só acessíveis via métodos (Getters/Setters) ou lógica de negócio controlada.
 
-### Tratamento de Erros
-- Exceções para entradas inválidas
-- Validação em tempo real das transações
-- Recuperação de dados corrompidos
+ Gerenciamento de Memória
+.Alocação Dinâmica (Heap): Os materiais são criados usando new Material(...) durante o fluxo de execução.
+
+.Desalocação Segura: O destrutor da classe Pessoa se encarrega de dar delete no material para evitar Memory Leaks.
+
+### Tratamento de Exceções e UX
+.Validação Robusta: O sistema não aceita CPFs ou CNPJs inválidos (algoritmo matemático) ou duplicados.
+
+.Fluxo de Cancelamento: O usuário pode digitar = em qualquer campo de entrada para cancelar a operação e voltar ao menu anterior, graças a uma exceção personalizada (OperacaoCancelada).
+
+.Persistência (File I/O): Algoritmos complexos de parsing que leem arquivos de texto, modificam linhas específicas (ex: atualizar saldo) e reescrevem o arquivo.
+
+### Estrutura de Arquivos
+-> main.cpp: Ponto de entrada. Inicia o SistemaController.
+
+-> SistemaController: O cérebro. Gerencia os menus, o fluxo de telas e conecta o usuário às classes de negócio.
+
+-> InputHandler: Camada de abstração para leitura de teclado. Trata erros de buffer (cin), validações e cancelamentos.
+
+-> Validacao: Classe estática com algoritmos matemáticos de CPF/CNPJ.
+
+-> Pessoa / Catador / Colaborador: Classes de Modelo (Entidades).
+
+-> Cooperativas: Classe de Modelo com lógica financeira.
+
+-> Administrador: Classe de serviço para relatórios.
+
+-> Material: Objeto simples representando o item reciclável.
+
+-> *.txt: Bases de dados persistentes.
+
 
 ## Pontos Importantes
 
-1. **Segurança**: Cada usuário só acessa seus próprios dados
-2. **Consistência**: Transações atualizam múltiplos arquivos simultaneamente
-3. **Usabilidade**: Menus intuitivos com validação passo a passo
-4. **Extensibilidade**: Arquitetura modular permite adição de novos recursos
+1. *Segurança*: Cada usuário só acessa seus próprios dados
+2. *Consistência*: Transações atualizam múltiplos arquivos simultaneamente
+3. *Usabilidade*: Menus intuitivos com validação passo a passo
+4. *Extensibilidade*: Arquitetura modular permite adição de novos recursos
 
 ## Possíveis Melhorias Futuras
 
@@ -169,10 +196,10 @@ Ao executar o sistema, você verá:
 
 ### Problemas Comuns
 
-1. **Erro de compilação**: Verifique se todos os arquivos .cpp estão no diretório
-2. **Arquivos não encontrados**: Execute o programa no diretório correto
-3. **Entrada inválida**: O sistema pedirá para digitar novamente
-4. **Dados corrompidos**: Os arquivos .txt podem ser editados manualmente
+1. *Erro de compilação*: Verifique se todos os arquivos .cpp estão no diretório
+2. *Arquivos não encontrados*: Execute o programa no diretório correto
+3. *Entrada inválida*: O sistema pedirá para digitar novamente
+4. *Dados corrompidos*: Os arquivos .txt podem ser editados manualmente
 
 ### Logs e Debug
 - Todas as transações são registradas em historico_compras.txt
@@ -181,7 +208,7 @@ Ao executar o sistema, você verá:
 
 ---
 
-Este sistema oferece uma solução completa para gestão de reciclagem, desde a coleta até a comercialização, com foco em usabilidade e robustez técnica.
+O sistema oferece uma solução completa para gestão de reciclagem, desde a coleta até a comercialização, com foco em usabilidade e robustez técnica.
 
 ## Estrutura de Classes (Diagrama Conceitual)
 
