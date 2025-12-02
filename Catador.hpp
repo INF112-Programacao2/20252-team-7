@@ -66,6 +66,10 @@ public:
     // Usado pela Cooperativa na hora do pagamento.
     void adicionarSaldoAoArquivo(float valorAdicionado);
     
+    // Lê o arquivo de colaboradores.
+    // Filtra os dados para mostrar apenas Endereço e Materiais (preserva a privacidade do nome).
+    void visualizarColaboradores();
+    
     // [Gestão de Estado]
     // Quando o usuário entra no sistema, este método lê o arquivo .txt e atualiza
     // a variável '_saldo' na memória RAM para refletir o valor real guardado.

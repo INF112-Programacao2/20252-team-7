@@ -1,31 +1,30 @@
 #include "Catador.hpp"
 #include <iostream>
-#include <fstream>  // [Persistência] Biblioteca para leitura/escrita de arquivos
-#include <vector>   // [Memória] Biblioteca STL para vetores dinâmicos
+#include <fstream>  // [Persistência] Biblioteca para manipulação de arquivos (File I/O)
+#include <vector>   // [Memória] Biblioteca STL para vetores dinâmicos (arrays que crescem)
 #include <string>
 
 // ==================================================================================
 // CONSTRUTOR DE CÓPIA
-// Este construtor recebe um objeto 'Pessoa' genérico e o "promove" a Catador.
+// Este construtor permite criar um Catador a partir de um objeto Pessoa genérico.
 // A sintaxe ': Pessoa(pessoa)' chama o construtor de cópia da classe base,
-// copiando nome, cpf e endereço. Em seguida, inicializamos o saldo com 0.
+// copiando automaticamente nome, cpf, endereço e o ponteiro do material.
+// Em seguida, inicializamos o atributo específico '_saldo' com 0.0f.
 // ==================================================================================
 Catador::Catador(const Pessoa& pessoa) : Pessoa(pessoa), _saldo(0.0f) {}
 
 // ==================================================================================
 // CONSTRUTOR PADRÃO (Parametrizado)
 // ----------------------------------------------------------------------------------
-// [POO - Inicialização em Cadeia]
-// Recebemos os dados brutos e repassamos imediatamente para o construtor da 
-// classe Pessoa (: Pessoa(nome...)). Isso evita duplicar a lógica de atribuição.
+// Recebemos os dados brutos e os repassamos imediatamente para o construtor da 
+// classe Pessoa via lista de inicialização (: Pessoa(...)).
+// Isso é mais eficiente do que atribuir manualmente dentro das chaves { }.
 // ==================================================================================
 Catador::Catador(std::string nome, std::string endereco, std::string cpf, Material* material)
     : Pessoa(nome, endereco, cpf, material), _saldo(0.0f) {}
 
 // ==================================================================================
 // DESTRUTOR
-// ----------------------------------------------------------------------------------
-// [Memória]
 // ==================================================================================
 Catador::~Catador() {}
 
@@ -36,10 +35,11 @@ float Catador::getSaldo() const { return _saldo; }
 void Catador::setSaldo(float valor) { _saldo = valor; }
 
 // ==================================================================================
-// RECOLHER MATERIAL
+// LÓGICA DE NEGÓCIO: RECOLHER MATERIAL
 // ----------------------------------------------------------------------------------
-// Usamos 'this->getMaterial()' porque o atributo '_material' é privado na classe Pessoa.
-// Não podemos acessar '_material' diretamente aqui, temos que pedir ao método público da mãe.
+// Simula a ação de adicionar peso ao material que o catador já carrega.
+// Note o uso de 'this->getMaterial()'. Como o atributo '_material' é privado na 
+// classe Pessoa, o Catador (filho) precisa pedir acesso via método público (getter).
 // ==================================================================================
 void Catador::recolherMaterial(Material* material) {
     if (material && this->getMaterial()) {
@@ -52,8 +52,8 @@ void Catador::recolherMaterial(Material* material) {
 // ==================================================================================
 // CADASTRO INICIAL
 // ----------------------------------------------------------------------------------
-// std::ios::app (Append): Abre o arquivo e posiciona o cursor no final.
-// Isso garante que não vamos apagar os catadores que já foram cadastrados antes.
+// Abre o arquivo em modo 'append' (std::ios::app). Isso significa que o cursor
+// de escrita é posicionado no final do arquivo, preservando os dados antigos.
 // ==================================================================================
 void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) {
     std::ofstream arquivo("cadastro_catador.txt", std::ios::app);
@@ -61,7 +61,7 @@ void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, 
     if (arquivo.is_open()) {
         arquivo << "Nome: " << nome << "\nEndereço: " << endereco << "\nCPF: " << cpf << "\n";
         
-        // Lógica condicional para escrita formatada
+        // Lógica condicional para formatar a saída
         if (material) {
             arquivo << "Material: " << material->getPeso() << "kg de " << material->getNomeTipo() << "\n";
         } else {
@@ -69,63 +69,63 @@ void Catador::cadastro(std::string nome, std::string endereco, std::string cpf, 
         }
         
         arquivo << "Saldo: R$ " << _saldo << "\n------------------------\n";
-        arquivo.close(); // Sempre liberar o recurso do sistema operacional
+        arquivo.close(); // [Boa Prática] Sempre liberar o recurso do sistema operacional.
         std::cout << "Catador cadastrado com sucesso!\n";
     }
 }
 
 // ==================================================================================
-// ATUALIZAR SALDO
+// ATUALIZAR SALDO 
 // ----------------------------------------------------------------------------------
-// Arquivos de texto sequenciais não permitem editar uma linha no meio facilmente.
-// A estratégia padrão é:
-// 1. Ler TUDO para a memória.
-// 2. Modificar a linha desejada na memória.
-// 3. Reescrever o arquivo inteiro com os dados novos.
+// Arquivos de texto (.txt) não permitem editar uma linha específica facilmente,
+// pois mudar "10" para "100" empurraria todos os caracteres seguintes.
+// A Estratégia de Update usada aqui é:
+// 1. Ler TODO o arquivo para a memória RAM (usando um vector<string>).
+// 2. Encontrar e modificar a linha desejada na memória.
+// 3. Apagar o arquivo antigo e reescrever tudo com os dados novos.
 // ==================================================================================
 void Catador::adicionarSaldoAoArquivo(float valorAdicionado) {
     std::ifstream leitura("cadastro_catador.txt"); // Modo Leitura
-    std::vector<std::string> linhas; // Vetor dinâmico para guardar o arquivo
+    std::vector<std::string> linhas; // Vetor dinâmico para armazenar o arquivo temporariamente
     std::string linha;
     
     std::string cpfAlvo = "CPF: " + this->getCpf();
     bool encontrouUsuario = false;
-    bool saldoAtualizado = false; // Flag para garantir que só alteramos o saldo deste usuário
+    bool saldoAtualizado = false; // Flag de controle
 
     if (!leitura.is_open()) {
         std::cout << "Erro: Base de dados de catadores nao encontrada.\n";
         return;
     }
 
-    // Carregar arquivo 
+    // Carregar e Modificar
     while (std::getline(leitura, linha)) {
-        // Verifica se entramos no bloco do usuário correto
+        // Verifica se entramos no bloco de dados deste usuário (pelo CPF)
         if (linha.find(cpfAlvo) != std::string::npos) {
             encontrouUsuario = true;
         }
 
-        // Se estamos no bloco do usuário e achamos a linha de saldo
+        // Se estamos no bloco certo E achamos a linha de saldo...
         if (encontrouUsuario && linha.find("Saldo: R$ ") != std::string::npos && !saldoAtualizado) {
             try {
-                // 'substr(10)' pega tudo depois de "Saldo: R$ "
-                // 'stof' converte esse texto para número float
+                // Extrai o valor numérico (substring após o texto fixo)
                 float saldoAntigo = std::stof(linha.substr(10));
                 float novoSaldo = saldoAntigo + valorAdicionado;
                 
-                // Cria a nova string atualizada
+                // Reconstrói a linha com o novo valor
                 std::string novaLinha = "Saldo: R$ " + std::to_string(novoSaldo);
                 linhas.push_back(novaLinha);
                 
-                // Atualiza também o objeto na memória RAM para refletir a mudança imediata
+                // Atualiza também o objeto na RAM para feedback imediato
                 this->_saldo = novoSaldo;
-                saldoAtualizado = true; // Marca como feito para não alterar outros saldos
+                saldoAtualizado = true; // Garante que não altere saldos de homônimos ou erros
             } catch (...) {
-                // [Tratamento de Erro] Se falhar a conversão, mantém a linha original para não corromper
+                // Se falhar a conversão, mantém a linha original
                 linhas.push_back(linha); 
             }
         } 
         else if (linha.find("------------------------") != std::string::npos) {
-            // Se chegou na linha tracejada, acabou o bloco deste usuário
+            // Fim do bloco deste usuário
             if (encontrouUsuario) {
                 encontrouUsuario = false;
                 saldoAtualizado = false;
@@ -133,14 +133,14 @@ void Catador::adicionarSaldoAoArquivo(float valorAdicionado) {
             linhas.push_back(linha);
         }
         else {
-            // Qualquer outra linha (Nome, Endereço) é apenas copiada
+            // Linhas que não precisam de alteração são apenas copiadas
             linhas.push_back(linha);
         }
     }
     leitura.close();
 
-    // Reescrever o arquivo 
-    // std::ofstream sem 'ios::app' apaga o arquivo atual e cria um novo vazio (Truncate)
+    //Reescrever
+    // std::ofstream sem 'ios::app' trunca (apaga) o arquivo existente
     std::ofstream escrita("cadastro_catador.txt");
     for (const auto& l : linhas) {
         escrita << l << "\n";
@@ -151,7 +151,7 @@ void Catador::adicionarSaldoAoArquivo(float valorAdicionado) {
 // ==================================================================================
 // GESTÃO DE ESTADO: CARREGAR SALDO
 // ----------------------------------------------------------------------------------
-// Este método vai no arquivo, busca o valor real e atualiza a variável '_saldo'.
+// começa com saldo 0. Este método lê o arquivo para buscar o saldo real acumulado.
 // ==================================================================================
 void Catador::carregarSaldo() {
     std::ifstream arquivo("cadastro_catador.txt");
@@ -166,19 +166,18 @@ void Catador::carregarSaldo() {
             usuarioEncontrado = true;
         }
 
-        // Se achou o usuário e a linha de saldo
         if (usuarioEncontrado && linha.find("Saldo: R$ ") != std::string::npos) {
             try {
-                // Converte string para float e guarda no atributo privado
+                // Converte string do arquivo para float na memória
                 this->_saldo = std::stof(linha.substr(10));
             } catch (...) {
                 this->_saldo = 0.0f;
             }
-            break; // Otimização: Já achou o que queria, para de ler o arquivo
+            break; // Otimização: Já achou, para de ler.
         }
 
         if (usuarioEncontrado && linha.find("------------------------") != std::string::npos) {
-            break; // Fim do bloco
+            break;
         }
     }
     arquivo.close();
@@ -188,11 +187,62 @@ void Catador::visualizarCooperativas() {
     std::cout << "\n=== COOPERATIVAS DISPONIVEIS ===\n";
     std::ifstream arquivo("cadastro_cooperativa.txt");
     std::string linha;
-    
     if (arquivo.is_open()) {
-        while (std::getline(arquivo, linha)) {
-            std::cout << linha << "\n";
-        }
+        while (std::getline(arquivo, linha)) std::cout << linha << "\n";
         arquivo.close();
     }
+}
+
+// ==================================================================================
+// VISUALIZAR COLABORADORES (Modo Privacidade)
+// ----------------------------------------------------------------------------------
+// [Lógica de Filtro e Privacidade]
+// O Catador precisa saber onde buscar material (Endereço) e o quê tem lá (Material),
+// mas não precisa saber o nome do morador.
+// Este método lê o arquivo de colaboradores e imprime apenas os dados relevantes.
+// ==================================================================================
+void Catador::visualizarColaboradores() {
+    std::ifstream arquivo("cadastro_colaborador.txt");
+    if (!arquivo.is_open()) {
+        std::cout << "Nenhum colaborador cadastrado.\n";
+        return;
+    }
+
+    std::string linha;
+    std::string enderecoAtual;
+    std::vector<std::string> materiaisAtuais; // Armazena lista de itens temporariamente
+    
+    std::cout << "\n=============================================\n";
+    std::cout << "   PONTOS DE COLETA (Enderecos e Materiais)  \n";
+    std::cout << "=============================================\n";
+
+    while (std::getline(arquivo, linha)) {
+        // 1. Identifica Endereço (Pula "Endereço: " que tem 10 chars + encoding)
+        if (linha.find("Endereço: ") == 0) {
+            enderecoAtual = linha.substr(10); 
+        }
+        // 2. Identifica Materiais (Ignora se for "Nenhum")
+        else if (linha.find("Material: ") == 0) {
+            if (linha.find("Nenhum") == std::string::npos) {
+                materiaisAtuais.push_back(linha.substr(10)); // Guarda só a descrição
+            }
+        }
+        // 3. Fim do bloco de um usuário -> Processa e Imprime
+        else if (linha.find("------------------------") != std::string::npos) {
+            // Só exibe se houver materiais úteis para coleta
+            if (!materiaisAtuais.empty() && !enderecoAtual.empty()) {
+                std::cout << ">> LOCAL: " << enderecoAtual << "\n";
+                std::cout << "   DISPONIVEL:\n";
+                for (const auto& mat : materiaisAtuais) {
+                    std::cout << "   - " << mat << "\n";
+                }
+                std::cout << "---------------------------------------------\n";
+            }
+            
+            // Reseta variáveis para ler o próximo usuário do arquivo
+            enderecoAtual = "";
+            materiaisAtuais.clear();
+        }
+    }
+    arquivo.close();
 }

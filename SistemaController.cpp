@@ -21,7 +21,7 @@ void SistemaController::executar() {
 
 // ==================================================================================
 // MENU PRINCIPAL
-// [Lógica] Usa um loop 'do-while' para manter o programa rodando até o usuário
+// Usa um loop 'do-while' para manter o programa rodando até o usuário
 // escolher a opção 0 (Sair).
 // ==================================================================================
 void SistemaController::menuPrincipal() {
@@ -119,7 +119,6 @@ void SistemaController::menuCatador() {
 
         std::string cpfLogado = "";
 
-        // Lógica de Login
         if (opInicial == 1) {
             std::string cpf = InputHandler::getCPF("CPF: ");
             if (catadorExiste(cpf)) {
@@ -129,46 +128,36 @@ void SistemaController::menuCatador() {
                 std::cout << ">> CPF nao encontrado no sistema.\n";
             }
         } 
-        // Lógica de Cadastro
         else if (opInicial == 2) {
             std::cout << "--- NOVO CADASTRO DE CATADOR ---\n";
-            
-            // Chama a função com try/catch para garantir unicidade
             std::string cpf = obterCPFUnicoCatador(); 
             std::string nome = InputHandler::getString("Nome Completo: ");
             std::string end = InputHandler::getEndereco("Endereco: ");
-
-            // O objeto 'cat' é criado na memória Stack (automática).
-            // Passamos 'nullptr' no material pois no cadastro ele não tem nada.
-            Catador cat(nome, end, cpf, nullptr);
             
-            // Persiste os dados no arquivo .txt
+            // Cadastro sem material inicial
+            Catador cat(nome, end, cpf, nullptr);
             cat.cadastro(nome, end, cpf, nullptr);
             
-            // O objeto 'cat' é destruído automaticamente aqui ao sair do 'else if',
-            // mas os dados foram salvos no arquivo.
             cpfLogado = cpf;
         }
 
-        // Área Logada
         if (!cpfLogado.empty()) {
-            // Recriamos o objeto Catador apenas para manipular as funções dele.
             Catador cat("", "", cpfLogado, nullptr);
-            
-            // Lê o saldo do arquivo para a memória RAM.
-            cat.carregarSaldo(); 
+            cat.carregarSaldo(); // Carrega o saldo atual do arquivo
             
             int op;
             do {
                 std::cout << "\n=== AREA DO CATADOR (" << cpfLogado << ") ===\n";
-                std::cout << "1. Ver Cooperativas Disponiveis\n";
+                std::cout << "1. Ver Cooperativas (Onde Vender)\n";
                 std::cout << "2. Ver Meu Saldo\n";
+                std::cout << "3. Ver Locais de Coleta (Colaboradores)\n"; // [OPÇÃO MANTIDA]
                 std::cout << "0. Sair (Logout)\n";
                 
                 op = InputHandler::getInt("Opcao: ");
                 
                 if(op == 1) cat.visualizarCooperativas();
                 else if(op == 2) std::cout << "Saldo: R$ " << cat.getSaldo() << "\n";
+                else if(op == 3) cat.visualizarColaboradores(); // Chama o método novo do Catador
                 
             } while (op != 0);
         }

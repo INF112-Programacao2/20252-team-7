@@ -4,3 +4,18 @@ CPF: 10203040501
 Material: Nenhum (Cadastro Inicial)
 Pontos: 100
 ------------------------
+Nome: Joana
+Endereço: Rua dos Estudantes
+CPF: 50138766649
+Material: 8.00kg de Papel
+Material: 15.00kg de Metal
+Pontos: 176
+------------------------
+Nome: Joaquin
+Endereço: Flores 
+CPF: 70228121604
+Material: 16.00kg de Papel
+Material: 60.00kg de Metal
+Material: 3.00kg de Plastico
+Pontos: 381
+------------------------

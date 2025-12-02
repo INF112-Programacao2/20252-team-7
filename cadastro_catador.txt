@@ -4,3 +4,9 @@ CPF: 12345678901
 Material: Nenhum (Cadastro Inicial)
 Saldo: R$ 0
 ------------------------
+Nome: Gabriel Valerio
+Endereço: Centro, Vicosa 
+CPF: 70228121604
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 0
+------------------------
