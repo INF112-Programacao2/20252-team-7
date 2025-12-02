@@ -1,1 +1,47 @@
-TESTE
+COMO EXECUTAR:
+
+Comandos:
+*Makefile*
+make clean : limpa o makefile para gerar um novo (caso dê problema na compilação)
+make : compila o makefile
+make run : roda o código
+
+*Padrão*
+------------
+------------
+------------
+------------
+
+EXPLICAÇÃO DO TRABALHO:
+
+*Conceito*
+    Nosso trabalho visa realizar a interação entre catadores de materiais, colaboradores de doações 
+e cooperativas que possam comprar os materiais.
+Em suma, o projeto correlaciona as classes de forma que elas fiquem interligadas.
+
+*Menu*
+    O menu principal é por onde o usuário vai controlar as ações que deseja fazer.
+Pode ser referido a 4 tipos de usuário: Administrador; Catador; Colaborador; Cooperativa.
+Cada usuário pode realizar certas ações.
+
+    *Administrador* 
+        1. O usuário pode visualizar a lista de colaboradores cadastrados.
+        2. O usuário pode visualizar a lista de cooperativas cadastradas.
+        3. O usuário pode visualizar a lista de catadores cadastrados.
+        4. O usuário ordena, por ondem decrescente, um ranking de pontuação.
+        5. O usuário gera um realtório geral com todos os dados de materiais.
+
+    *Catador*
+        1. Entrar com login de CPF, caso já esteja cadastrado.
+        2. Cadastrar um novo usuário tipo Catador.
+
+    *Colaborador*
+        1. Entrar com login de CPF, caso já esteja cadastrado.
+        2. Cadastrar um novo usuário tipo Colaborador.
+
+    *Cooperativa*
+        1. Entrar com login de CNPJ, caso já esteja cadastrado.
+        2. Cadastrar um novo usuário tipo Cooperativa.
+
+    *Geral*
+        0. Voltar / Sair
