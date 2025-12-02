@@ -253,3 +253,6 @@ Administrador (Classe Utilitária)
 - Cada novo usuário gera uma entrada no arquivo correspondente
 - Cada transação gera uma linha em historico_compras.txt
 - Pontuações e saldos são atualizados nos arquivos de cadastro
+
+### Diagrama de Classes
+https://www.canva.com/design/DAG4BHEGPtI/3AuO0Ok3Jp2t8DOaY5Us8A/edit?utm_content=DAG4BHEGPtI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
