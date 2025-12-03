@@ -70,7 +70,8 @@ std::string SistemaController::obterCPFUnicoCatador() {
             }
             return cpf; // Se passou direto, retorna o CPF válido e único
             
-        } catch (const std::runtime_error& e) {
+        }
+        catch (const std::runtime_error& e) {
             // [Exceção] avisa o usuário
             std::cout << ">> " << e.what() << "\n>> Por favor, digite outro CPF.\n";
         }
@@ -85,7 +86,8 @@ std::string SistemaController::obterCPFUnicoColaborador() {
                 throw std::runtime_error("Erro: Este CPF ja esta cadastrado como Colaborador!");
             }
             return cpf;
-        } catch (const std::runtime_error& e) {
+        }
+        catch (const std::runtime_error& e) {
             std::cout << ">> " << e.what() << "\n>> Por favor, digite outro CPF.\n";
         }
     }
@@ -99,7 +101,8 @@ std::string SistemaController::obterCNPJUnico() {
                 throw std::runtime_error("Erro: Este CNPJ ja esta cadastrado!");
             }
             return cnpj;
-        } catch (const std::runtime_error& e) {
+        }
+        catch (const std::runtime_error& e) {
             std::cout << ">> " << e.what() << "\n>> Por favor, digite outro CNPJ.\n";
         }
     }
@@ -111,55 +114,70 @@ std::string SistemaController::obterCNPJUnico() {
 void SistemaController::menuCatador() {
     int opInicial;
     do {
-        std::cout << "\n--- MENU CATADOR ---\n";
-        std::cout << "1. Entrar (Login)\n";
-        std::cout << "2. Cadastrar Novo Catador\n";
-        std::cout << "0. Voltar\n";
-        opInicial = InputHandler::getInt("Opcao: ");
+        try {
+            std::cout << "\n--- MENU CATADOR ---\n";
+            std::cout << "1. Entrar (Login)\n";
+            std::cout << "2. Cadastrar Novo Catador\n";
+            std::cout << "0. Voltar\n";
+            opInicial = InputHandler::getInt("Opcao: ");
 
-        std::string cpfLogado = "";
+            std::string cpfLogado = "";
 
-        if (opInicial == 1) {
-            std::string cpf = InputHandler::getCPF("CPF: ");
-            if (catadorExiste(cpf)) {
-                std::cout << "Login realizado com sucesso!\n";
+            if (opInicial == 1) {
+                std::string cpf = InputHandler::getCPF("CPF: ");
+                if (catadorExiste(cpf)) {
+                    std::cout << "Login realizado com sucesso!\n";
+                    cpfLogado = cpf;
+                } else {
+                    std::cout << ">> CPF nao encontrado no sistema.\n";
+                }
+            } 
+            else if (opInicial == 2) {
+                std::cout << "--- NOVO CADASTRO DE CATADOR ---\n";
+                std::string cpf = obterCPFUnicoCatador(); 
+                std::string nome = InputHandler::getString("Nome Completo: ");
+                std::string end = InputHandler::getEndereco("Endereco: ");
+                
+                // Cadastro sem material inicial
+                Catador cat(nome, end, cpf, nullptr);
+                cat.cadastro(nome, end, cpf, nullptr);
+                
                 cpfLogado = cpf;
-            } else {
-                std::cout << ">> CPF nao encontrado no sistema.\n";
             }
-        } 
-        else if (opInicial == 2) {
-            std::cout << "--- NOVO CADASTRO DE CATADOR ---\n";
-            std::string cpf = obterCPFUnicoCatador(); 
-            std::string nome = InputHandler::getString("Nome Completo: ");
-            std::string end = InputHandler::getEndereco("Endereco: ");
-            
-            // Cadastro sem material inicial
-            Catador cat(nome, end, cpf, nullptr);
-            cat.cadastro(nome, end, cpf, nullptr);
-            
-            cpfLogado = cpf;
-        }
+            else{
+                throw std::invalid_argument( "Opcao invalida! Digite uma das opcoes informadas." );
+            }
 
-        if (!cpfLogado.empty()) {
-            Catador cat("", "", cpfLogado, nullptr);
-            cat.carregarSaldo(); // Carrega o saldo atual do arquivo
-            
-            int op;
-            do {
-                std::cout << "\n=== AREA DO CATADOR (" << cpfLogado << ") ===\n";
-                std::cout << "1. Ver Cooperativas (Onde Vender)\n";
-                std::cout << "2. Ver Meu Saldo\n";
-                std::cout << "3. Ver Locais de Coleta (Colaboradores)\n"; // [OPÇÃO MANTIDA]
-                std::cout << "0. Sair (Logout)\n";
+            if (!cpfLogado.empty()) {
+                Catador cat("", "", cpfLogado, nullptr);
+                cat.carregarSaldo(); // Carrega o saldo atual do arquivo
                 
-                op = InputHandler::getInt("Opcao: ");
-                
-                if(op == 1) cat.visualizarCooperativas();
-                else if(op == 2) std::cout << "Saldo: R$ " << cat.getSaldo() << "\n";
-                else if(op == 3) cat.visualizarColaboradores(); // Chama o método novo do Catador
-                
-            } while (op != 0);
+                int op;
+                do {
+                    try{
+                        std::cout << "\n=== AREA DO CATADOR (" << cpfLogado << ") ===\n";
+                        std::cout << "1. Ver Cooperativas (Onde Vender)\n";
+                        std::cout << "2. Ver Meu Saldo\n";
+                        std::cout << "3. Ver Locais de Coleta (Colaboradores)\n"; // [OPÇÃO MANTIDA]
+                        std::cout << "0. Sair (Logout)\n";
+                        
+                        op = InputHandler::getInt("Opcao: ");
+                        
+                        if(op == 1) cat.visualizarCooperativas();
+                        else if(op == 2) std::cout << "Saldo: R$ " << cat.getSaldo() << "\n";
+                        else if(op == 3) cat.visualizarColaboradores(); // Chama o método novo do Catador
+                        else {
+                            throw std::invalid_argument( "Opcao invalida! Digite uma das opcoes informadas." );
+                        }
+                    }
+                    catch( std::invalid_argument &e ) {
+                        std::cerr << e.what( ) << std::endl;
+                    }
+                } while (op != 0);
+            }
+        }
+        catch( std::invalid_argument &e ) {
+            std::cerr << e.what( ) << std::endl;
         }
 
     } while (opInicial != 0);
@@ -171,77 +189,93 @@ void SistemaController::menuCatador() {
 void SistemaController::menuColaborador() {
     int opInicial;
     do {
-        // Menus de Login/Cadastro similares ao Catador)
-        std::cout << "\n--- MENU COLABORADOR ---\n";
-        std::cout << "1. Entrar (Login)\n";
-        std::cout << "2. Cadastrar Novo Colaborador\n";
-        std::cout << "0. Voltar\n";
-        opInicial = InputHandler::getInt("Opcao: ");
+        try{
+            // Menus de Login/Cadastro similares ao Catador)
+            std::cout << "\n--- MENU COLABORADOR ---\n";
+            std::cout << "1. Entrar (Login)\n";
+            std::cout << "2. Cadastrar Novo Colaborador\n";
+            std::cout << "0. Voltar\n";
+            opInicial = InputHandler::getInt("Opcao: ");
 
-        std::string cpfLogado = "";
+            std::string cpfLogado = "";
 
-        if (opInicial == 1) {
-            std::string cpf = InputHandler::getString("CPF: ");
-            if (colaboradorExiste(cpf)) {
-                std::cout << "Login realizado!\n";
+            if (opInicial == 1) {
+                std::string cpf = InputHandler::getString("CPF: ");
+                if (colaboradorExiste(cpf)) {
+                    std::cout << "Login realizado!\n";
+                    cpfLogado = cpf;
+                } else {
+                    std::cout << ">> CPF nao encontrado.\n";
+                }
+            }
+            else if (opInicial == 2) {
+                std::cout << "--- NOVO CADASTRO DE COLABORADOR ---\n";
+                std::string cpf = obterCPFUnicoColaborador();
+                std::string nome = InputHandler::getString("Nome: ");
+                std::string end = InputHandler::getEndereco("Endereco: ");
+                
+                // Objeto Stack criado, dados salvos no TXT, objeto destruído.
+                Colaborador col(nome, end, cpf, nullptr);
+                col.cadastro(nome, end, cpf, nullptr);
+                
+                // Bônus de gamificação
+                col.receberPontos(100); 
                 cpfLogado = cpf;
-            } else {
-                std::cout << ">> CPF nao encontrado.\n";
+            }
+            else {
+                throw std::invalid_argument( "Opcao invalida! Digite uma das opcoes informadas." );
+            }
+
+            // Área Logada
+            if (!cpfLogado.empty()) {
+                Colaborador col("", "", cpfLogado, nullptr);
+                col.carregarPontos(); // Lê os pontos do arquivo
+                int op;
+                do {
+                    try{    
+                        std::cout << "\n=== AREA DO COLABORADOR (" << cpfLogado << ") ===\n";
+                        std::cout << "1. Ver Meus Pontos (e Regras)\n";
+                        std::cout << "2. Fazer Doacao (Entregar Material)\n";
+                        std::cout << "0. Sair\n";
+                        
+                        op = InputHandler::getInt("Opcao: ");
+                        
+                        if(op == 1) {
+                            // UX: Mostra tabela de pesos
+                            std::cout << "\n=== EXTRATO ===\nTOTAL: " << col.getPontos() << " PTS\n";
+                            std::cout << "Tabela: Plastico(x3), Papel(x2), Metal(x4)\n";
+                        }
+                        else if(op == 2) {
+                            std::cout << "\n--- NOVA DOACAO ---\n";
+                            int t = InputHandler::getTipoMaterial("Material: ");
+                            float p = InputHandler::getFloat("Peso (kg): ");
+                            
+                            // Aqui usamos 'new' porque o objeto Material é independente
+                            // e passado por ponteiro. Estamos pedindo memória manual ao sistema.
+                            Material* m = new Material(p, t);
+                            
+                            // Passamos o ponteiro para o método processar
+                            col.realizarDoacao(m);
+                            
+                            // DESALOCAÇÃO OBRIGATÓRIA
+                            // Como nós criamos com 'new' aqui neste escopo, e a função realizarDoacao
+                            // apenas lê os dados para salvar no arquivo (ela não toma posse do ponteiro),
+                            // nós devemos deletar 'm' aqui para evitar vazamento de memória.
+                            delete m; 
+                            m = nullptr;
+                        }
+                        else {
+                            throw std::invalid_argument( "Opcao invalida! Digite uma das opcoees informadas." );
+                        }
+                    }
+                    catch( std::invalid_argument &e ) {
+                        std::cerr << e.what( ) << std::endl;
+                    }
+                } while (op != 0);
             }
         }
-        else if (opInicial == 2) {
-            std::cout << "--- NOVO CADASTRO DE COLABORADOR ---\n";
-            std::string cpf = obterCPFUnicoColaborador();
-            std::string nome = InputHandler::getString("Nome: ");
-            std::string end = InputHandler::getEndereco("Endereco: ");
-            
-            // Objeto Stack criado, dados salvos no TXT, objeto destruído.
-            Colaborador col(nome, end, cpf, nullptr);
-            col.cadastro(nome, end, cpf, nullptr);
-            
-            // Bônus de gamificação
-            col.receberPontos(100); 
-            cpfLogado = cpf;
-        }
-
-        // Área Logada
-        if (!cpfLogado.empty()) {
-            Colaborador col("", "", cpfLogado, nullptr);
-            col.carregarPontos(); // Lê os pontos do arquivo
-            int op;
-            do {
-                std::cout << "\n=== AREA DO COLABORADOR (" << cpfLogado << ") ===\n";
-                std::cout << "1. Ver Meus Pontos (e Regras)\n";
-                std::cout << "2. Fazer Doacao (Entregar Material)\n";
-                std::cout << "0. Sair\n";
-                
-                op = InputHandler::getInt("Opcao: ");
-                
-                if(op == 1) {
-                    // UX: Mostra tabela de pesos
-                    std::cout << "\n=== EXTRATO ===\nTOTAL: " << col.getPontos() << " PTS\n";
-                    std::cout << "Tabela: Plastico(x3), Papel(x2), Metal(x4)\n";
-                }
-                else if(op == 2) {
-                    std::cout << "\n--- NOVA DOACAO ---\n";
-                    int t = InputHandler::getTipoMaterial("Material: ");
-                    float p = InputHandler::getFloat("Peso (kg): ");
-                    
-                    // Aqui usamos 'new' porque o objeto Material é independente
-                    // e passado por ponteiro. Estamos pedindo memória manual ao sistema.
-                    Material* m = new Material(p, t);
-                    
-                    // Passamos o ponteiro para o método processar
-                    col.realizarDoacao(m);
-                    
-                    // DESALOCAÇÃO OBRIGATÓRIA
-                    // Como nós criamos com 'new' aqui neste escopo, e a função realizarDoacao
-                    // apenas lê os dados para salvar no arquivo (ela não toma posse do ponteiro),
-                    // nós devemos deletar 'm' aqui para evitar vazamento de memória.
-                    delete m; 
-                    m = nullptr;
-                }
-            } while (op != 0);
+        catch( std::invalid_argument &e ) {
+            std::cerr << e.what( ) << std::endl;
         }
     } while (opInicial != 0);
 }
@@ -252,89 +286,107 @@ void SistemaController::menuColaborador() {
 void SistemaController::menuCooperativa() {
     int opInicial;
     do {
-        std::cout << "\n--- MENU COOPERATIVA ---\n";
-        std::cout << "1. Entrar (Login)\n";
-        std::cout << "2. Cadastrar Nova Cooperativa\n";
-        std::cout << "0. Voltar\n";
-        opInicial = InputHandler::getInt("Opcao: ");
+        try{
+            std::cout << "\n--- MENU COOPERATIVA ---\n";
+            std::cout << "1. Entrar (Login)\n";
+            std::cout << "2. Cadastrar Nova Cooperativa\n";
+            std::cout << "0. Voltar\n";
+            opInicial = InputHandler::getInt("Opcao: ");
 
-        std::string cnpjLogado = "";
+            std::string cnpjLogado = "";
 
-        if (opInicial == 1) {
-            std::string cnpj = InputHandler::getCNPJ("CNPJ: ");
-            if (cooperativaExiste(cnpj)) {
-                std::cout << "Acesso liberado!\n";
-                cnpjLogado = cnpj;
-            } else {
-                std::cout << ">> CNPJ nao encontrado.\n";
-            }
-        }
-        else if (opInicial == 2) {
-            std::cout << "--- NOVO CADASTRO ---\n";
-            std::string cnpj = obterCNPJUnico();
-            std::string end = InputHandler::getEndereco("Endereco Sede: ");
-            std::cout << "--- PRECOS INICIAIS ---\n";
-            float p1 = InputHandler::getFloat("Plastico: ");
-            float p2 = InputHandler::getFloat("Papel: ");
-            float p3 = InputHandler::getFloat("Metal: ");
-            
-            Cooperativas coop;
-            coop.cadastro(p1, p2, p3, end, cnpj, nullptr);
-            cnpjLogado = cnpj;
-        }
-
-        if (!cnpjLogado.empty()) {
-            Cooperativas coop;
-            coop.setCnpj(cnpjLogado);
-            coop.carregarDados(); // Carrega preços do arquivo
-
-            // Exibe os preços carregados
-            std::cout << "\n[Sessao Iniciada] Precos Atuais:\n";
-            std::cout << "Plastico: R$" << coop.getPrecoPlastico() 
-                      << " | Papel: R$" << coop.getPrecoPapel() 
-                      << " | Metal: R$" << coop.getPrecoMetal() << "\n";
-
-            int op;
-            do {
-                std::cout << "\n=== AREA COOPERATIVA (" << cnpjLogado << ") ===\n";
-                std::cout << "1. Historico de Transacoes\n";
-                std::cout << "2. Registrar Compra (Pagar Catador)\n";
-                std::cout << "3. Relatorio Estatistico\n";
-                std::cout << "0. Sair\n";
-                
-                op = InputHandler::getInt("Opcao: ");
-                
-                if(op == 1) coop.relatorioMaterialComprado();
-                else if(op == 2) {
-                    std::cout << "\n--- REGISTRAR COMPRA ---\n";
-                    std::string cpfCatador = InputHandler::getCPF("CPF do Catador: ");
-                    
-                    if (!catadorExiste(cpfCatador)) {
-                        std::cout << ">> Erro: Catador nao encontrado! Cadastre-o primeiro.\n";
-                    } else {
-                        int t = InputHandler::getTipoMaterial("Material recebido: ");
-                        float peso = InputHandler::getFloat("Peso (kg): ");
-                        
-                        // Define preço baseado no que foi carregado do arquivo
-                        float precoKg = 0;
-                        if(t == 1) precoKg = coop.getPrecoPlastico();
-                        else if(t == 2) precoKg = coop.getPrecoPapel();
-                        else if(t == 3) precoKg = coop.getPrecoMetal();
-                        
-                        float total = peso * precoKg;
-                        
-                        // Atualiza o arquivo do catador
-                        Catador c("", "N/A", cpfCatador, nullptr);
-                        c.adicionarSaldoAoArquivo(total);
-                        
-                        std::string nomeMat = (t==1) ? "Plastico" : (t==2) ? "Papel" : "Metal";
-                        coop.registrarCompra(cpfCatador, peso, total, nomeMat);
-                        
-                        std::cout << ">> SUCESSO! R$ " << total << " pagos ao CPF " << cpfCatador << ".\n";
-                    }
+            if (opInicial == 1) {
+                std::string cnpj = InputHandler::getCNPJ("CNPJ: ");
+                if (cooperativaExiste(cnpj)) {
+                    std::cout << "Acesso liberado!\n";
+                    cnpjLogado = cnpj;
+                } else {
+                    std::cout << ">> CNPJ nao encontrado.\n";
                 }
-                else if(op == 3) coop.gerarRelatorioEstatistico();
-            } while (op != 0);
+            }
+            else if (opInicial == 2) {
+                std::cout << "--- NOVO CADASTRO ---\n";
+                std::string cnpj = obterCNPJUnico();
+                std::string end = InputHandler::getEndereco("Endereco Sede: ");
+                std::cout << "--- PRECOS INICIAIS ---\n";
+                float p1 = InputHandler::getFloat("Plastico: ");
+                float p2 = InputHandler::getFloat("Papel: ");
+                float p3 = InputHandler::getFloat("Metal: ");
+                
+                Cooperativas coop;
+                coop.cadastro(p1, p2, p3, end, cnpj, nullptr);
+                cnpjLogado = cnpj;
+            }
+            else {
+                throw std::invalid_argument( "Opcao invalida! Digite uma das opcoes informadas." );
+            }
+
+            if (!cnpjLogado.empty()) {
+                Cooperativas coop;
+                coop.setCnpj(cnpjLogado);
+                coop.carregarDados(); // Carrega preços do arquivo
+
+                // Exibe os preços carregados
+                std::cout << "\n[Sessao Iniciada] Precos Atuais:\n";
+                std::cout << "Plastico: R$" << coop.getPrecoPlastico() 
+                        << " | Papel: R$" << coop.getPrecoPapel() 
+                        << " | Metal: R$" << coop.getPrecoMetal() << "\n";
+
+                int op;
+                do {
+                    try{
+                        std::cout << "\n=== AREA COOPERATIVA (" << cnpjLogado << ") ===\n";
+                        std::cout << "1. Historico de Transacoes\n";
+                        std::cout << "2. Registrar Compra (Pagar Catador)\n";
+                        std::cout << "3. Relatorio Estatistico\n";
+                        std::cout << "0. Sair\n";
+                        
+                        op = InputHandler::getInt("Opcao: ");
+                        
+                        if(op == 1) coop.relatorioMaterialComprado();
+                        else if(op == 2) {
+                            std::cout << "\n--- REGISTRAR COMPRA ---\n";
+                            std::string cpfCatador = InputHandler::getCPF("CPF do Catador: ");
+                            
+                            if (!catadorExiste(cpfCatador)) {
+                                std::cout << ">> Erro: Catador nao encontrado! Cadastre-o primeiro.\n";
+                            } else {
+                                int t = InputHandler::getTipoMaterial("Material recebido: ");
+                                float peso = InputHandler::getFloat("Peso (kg): ");
+                                
+                                // Define preço baseado no que foi carregado do arquivo
+                                float precoKg = 0;
+                                if(t == 1) precoKg = coop.getPrecoPlastico();
+                                else if(t == 2) precoKg = coop.getPrecoPapel();
+                                else if(t == 3) precoKg = coop.getPrecoMetal();
+                                
+                                float total = peso * precoKg;
+                                
+                                // Atualiza o arquivo do catador
+                                Catador c("", "N/A", cpfCatador, nullptr);
+                                c.adicionarSaldoAoArquivo(total);
+                                
+                                std::string nomeMat = (t==1) ? "Plastico" : (t==2) ? "Papel" : "Metal";
+                                coop.registrarCompra(cpfCatador, peso, total, nomeMat);
+                                
+                                std::cout << ">> SUCESSO! R$ " << total << " pagos ao CPF " << cpfCatador << ".\n";
+                            }
+                        }
+                        else if(op == 3) coop.gerarRelatorioEstatistico();
+
+                        else {
+                            throw std::invalid_argument( "Opcao invalida! Digite uma das opcoes informadas." );
+                        }
+                    }
+                    catch( std::invalid_argument &e ) {
+                        std::cerr << e.what( ) << std::endl;
+                    }
+
+                } while (op != 0);
+            }
+        } 
+        catch( std::invalid_argument &e ) {
+            std::cerr << e.what( ) << std::endl;
         }
     } while (opInicial != 0);
 }

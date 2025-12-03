@@ -19,3 +19,9 @@ Material: 60.00kg de Metal
 Material: 3.00kg de Plastico
 Pontos: 381
 ------------------------
+Nome: pedro
+Endereço: sape
+CPF: 12852079631
+Material: Nenhum (Cadastro Inicial)
+Pontos: 100
+------------------------

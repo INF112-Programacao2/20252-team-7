@@ -67,6 +67,9 @@ public:
     
     // Método utilitário para alterar propriedades do material interno
     void definirMaterial(Material* mat, float p, int t);
+
+    //Função virtual que força a implementação nas classes derivadas.( Aplica polimorfismo )
+    virtual void cadastro( std::string nome, std::string endereco, std::string cpf, Material* material ) = 0;
 };
 
 #endif

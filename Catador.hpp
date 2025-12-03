@@ -50,7 +50,7 @@ public:
     void recolherMaterial(Material* material);
     
     // [Persistência] Cria o registro inicial do catador no arquivo .txt
-    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) override;
     
     // Apenas lê o arquivo de cooperativas para informar onde vender.
     void visualizarCooperativas();

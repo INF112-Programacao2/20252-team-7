@@ -10,3 +10,9 @@ CPF: 70228121604
 Material: Nenhum (Cadastro Inicial)
 Saldo: R$ 325.000000
 ------------------------
+Nome: pedro
+Endereço: sape
+CPF: 12852079631
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 0
+------------------------

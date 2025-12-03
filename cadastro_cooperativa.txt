@@ -6,3 +6,11 @@ CNPJ: 11222333000181
 Endereco: UFV, Vicosa
 Precos - Plastico: R$8 | Papel: R$10 | Metal: R$20
 ------------------------
+CNPJ: 11111111111112
+Endereco: sdfgsdc
+Precos - Plastico: R$3.6 | Papel: R$3 | Metal: R$5.3
+------------------------
+CNPJ: 11111111111113
+Endereco: gsrgf
+Precos - Plastico: R$4 | Papel: R$3 | Metal: R$2
+------------------------

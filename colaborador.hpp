@@ -42,7 +42,7 @@ public:
     // ------------------------------------------------------------------------------
     
     // [Persistência] Cria o registro inicial no arquivo 'cadastro_colaborador.txt'.
-    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material);
+    void cadastro(std::string nome, std::string endereco, std::string cpf, Material* material) override;
     
     // [Regra de Negócio Principal]
     // Substitui a lógica simples de ganhar pontos.
