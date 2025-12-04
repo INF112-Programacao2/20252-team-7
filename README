@@ -140,7 +140,9 @@ Este projeto foi construído para demonstrar domínio sobre conceitos avançados
 ### Orientação a Objetos
 .Herança: As classes Catador e Colaborador herdam da classe base Pessoa, reaproveitando atributos como Nome, CPF e Endereço.
 
-.Polimorfismo: Uso de Destrutores Virtuais (virtual ~Pessoa()) para garantir que a memória seja limpa corretamente independentemente do tipo do objeto.
+.Polimorfismo: Uso de Destrutores Virtuais (virtual ~Pessoa()) para garantir que a memória seja limpa corretamente independentemente do tipo do objeto. Além disso, 
+há o uso de funções virtuais puras, na classe Pessoal  (como em virtual void cadastro(std::string nome, std::string endereco, 
+std::string cpf, Material* material) = 0;), tornando a classe abstrata e forçando classes derivadas (como Catador e Colaborador) a implementarem seu próprio método cadastro.
 
 .Encapsulamento: Atributos sensíveis (como _saldo e pontos) são private e só acessíveis via métodos (Getters/Setters) ou lógica de negócio controlada.
 
