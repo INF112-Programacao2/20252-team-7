@@ -1,1 +1,258 @@
-TESTE
+# Sistema de Reciclagem - Documentação Completa
+
+                -I- EcoSystem - Sistema de Gestão de Reciclagem -I-
+Um sistema robusto desenvolvido em C++ para gerenciar o ciclo de vida da reciclagem, conectando Doadores (Colaboradores), Coletores (Catadores) e Centros de Processamento (Cooperativas). O projeto foca na persistência de dados, gamificação e controle financeiro.
+
+- Sobre o Projeto
+Este projeto simula um ecossistema de reciclagem sustentável. O objetivo é incentivar a coleta seletiva através de um sistema de Gamificação (pontos para quem doa) e garantir a remuneração justa e registrada para os catadores (saldo financeiro real pago pelas cooperativas).
+
+O sistema opera inteiramente via console, utilizando manipulação de arquivos (.txt) para garantir que nenhum dado (saldos, pontos, cadastros) seja perdido quando o programa é fechado.
+
+## Nosso Trabalho
+
+Este é um sistema completo de gestão para cadeia de reciclagem que conecta três tipos de usuários:
+- *Colaboradores* - Doadores de materiais recicláveis
+- *Catadores* - Coletam e vendem materiais
+- *Cooperativas* - Compram materiais dos catadores
+- *Administrador* - Acompanha relatórios e estatísticas
+
+O sistema gerencia desde o cadastro de usuários até transações financeiras, com persistência em arquivos de texto.
+
+## Estrutura do Projeto
+
+### Arquivos do Sistema
+
+*Código-fonte:*
+main.cpp                - Ponto de entrada do programa
+SistemaController.hpp   - Controlador principal (cabeçalho)
+SistemaController.cpp   - Controlador principal (implementação)
+InputHandler.hpp        - Validação e leitura segura (cabeçalho)
+InputHandler.cpp        - Validação e leitura segura (implementação)
+Validacao.hpp           - Validações de CPF, CNPJ (cabeçalho)
+Validacao.cpp           - Validações de CPF, CNPJ (implementação)
+Pessoa.hpp              - Classe base Pessoa (cabeçalho)
+Pessoa.cpp              - Classe base Pessoa (implementação)
+Material.hpp            - Classe Material (cabeçalho)
+Material.cpp            - Classe Material (implementação)
+Catador.hpp             - Classe Catador (cabeçalho)
+Catador.cpp             - Classe Catador (implementação)
+colaborador.hpp         - Classe Colaborador (cabeçalho)
+colaborador.cpp         - Classe Colaborador (implementação)
+cooperativas.hpp        - Classe Cooperativas (cabeçalho)
+cooperativas.cpp        - Classe Cooperativas (implementação)
+administrador.hpp       - Classe Administrador (cabeçalho)
+administrador.cpp       - Classe Administrador (implementação)
+Makefile                - Script de compilação automática
+.gitignore              - Arquivos ignorados pelo Git
+
+*Arquivos de dados gerados (criados automaticamente):*
+cadastro_catador.txt          - Dados dos catadores e seus saldos
+cadastro_colaborador.txt      - Dados dos doadores e seus pontos
+cadastro_cooperativa.txt      - Dados das cooperativas
+historico_compras.txt         - Transações entre catadores e cooperativas
+estatisticas_[CNPJ].txt       - Relatórios por cooperativa
+ranking_geral.txt             - Ranking de pontuação dos colaboradores
+
+## Como Executar
+
+### Pré-requisitos
+- Compilador C++ (g++/clang++)
+- Sistema Unix/Linux (ou WSL no Windows)
+- Make (gerenciador de build)
+
+### Comandos Disponíveis
+
+# 1. Compilar o projeto
+make
+
+# 2. Executar o programa
+make run
+
+# 3. Limpar arquivos compilados
+make clean
+
+# 4. Compilar e executar em um único comando
+make && make run
+
+### Compilação Manual
+g++ -std=c++11 -o sistema *.cpp
+./sistema
+
+## Funcionalidades por Tipo de Usuário
+
+### COLABORADOR (Doador)
+- *Cadastro*: CPF único, nome, endereço
+- *Doação*: Registra entrega de materiais (Plástico, Papel, Metal)
+- *Pontuação*: Ganha pontos por doação (Plástico×3, Papel×2, Metal×4)
+- *Visualização*: Lista cooperativas disponíveis
+- *Extrato*: Consulta pontuação acumulada
+
+### CATADOR (Coletor)
+- *Cadastro*: CPF único, nome, endereço
+- *Saldo*: Controle financeiro das vendas
+- *Visualização*: Lista cooperativas para venda
+- *Transações*: Recebe pagamentos das cooperativas
+- *Histórico*: Consulta de vendas realizadas
+
+### COOPERATIVA (Compradora)
+- *Cadastro*: CNPJ único, endereço, preços por material
+- *Compras*: Registra compra de materiais de catadores
+- *Pagamentos*: Transfere valor para saldo do catador
+- *Relatórios*: Estatísticas por tipo de material
+- *Histórico*: Consulta todas as transações (filtrado por CNPJ)
+
+### ADMINISTRADOR (Gestor)
+- *Visualização*: Lista todos os usuários cadastrados
+- *Ranking*: Ordena colaboradores por pontuação (maior para menor)
+- *Relatório Global*: Consolida dados de todo o sistema
+
+# 5. Funcionalidades 
+## Menu Principal
+
+Ao executar o sistema, você verá:
+
+=== SISTEMA DE RECICLAGEM ===
+1. Administrador
+2. Catador
+3. Colaborador
+4. Cooperativa
+0. Sair
+
+### Fluxo Típico de Uso
+
+1. *Cadastro de Usuários*:
+   - Cada tipo de usuário se cadastra com CPF/CNPJ único
+   - Sistema valida formato e unicidade
+
+2. *Interações*:
+   - Colaborador faz doação → ganha pontos
+   - Catador coleta material → tem estoque
+   - Cooperativa compra do catador → transfere dinheiro
+
+3. *Relatórios*:
+   - Administrador gera ranking e estatísticas
+   - Cooperativas veem histórico de compras
+   - Todos os dados são persistidos em arquivos
+
+## Destaques Técnicos (Conceitos de POO e C++ aprendidos durante a disciplina)
+Este projeto foi construído para demonstrar domínio sobre conceitos avançados de programação aprendidos na disciplina de INF 112:
+
+### Orientação a Objetos
+.Herança: As classes Catador e Colaborador herdam da classe base Pessoa, reaproveitando atributos como Nome, CPF e Endereço.
+
+.Polimorfismo: Uso de Destrutores Virtuais (virtual ~Pessoa()) para garantir que a memória seja limpa corretamente independentemente do tipo do objeto.
+
+.Encapsulamento: Atributos sensíveis (como _saldo e pontos) são private e só acessíveis via métodos (Getters/Setters) ou lógica de negócio controlada.
+
+ Gerenciamento de Memória
+.Alocação Dinâmica (Heap): Os materiais são criados usando new Material(...) durante o fluxo de execução.
+
+.Desalocação Segura: O destrutor da classe Pessoa se encarrega de dar delete no material para evitar Memory Leaks.
+
+### Tratamento de Exceções e UX
+.Validação Robusta: O sistema não aceita CPFs ou CNPJs inválidos (algoritmo matemático) ou duplicados.
+
+.Fluxo de Cancelamento: O usuário pode digitar = em qualquer campo de entrada para cancelar a operação e voltar ao menu anterior, graças a uma exceção personalizada (OperacaoCancelada).
+
+.Persistência (File I/O): Algoritmos complexos de parsing que leem arquivos de texto, modificam linhas específicas (ex: atualizar saldo) e reescrevem o arquivo.
+
+### Estrutura de Arquivos
+-> main.cpp: Ponto de entrada. Inicia o SistemaController.
+
+-> SistemaController: O cérebro. Gerencia os menus, o fluxo de telas e conecta o usuário às classes de negócio.
+
+-> InputHandler: Camada de abstração para leitura de teclado. Trata erros de buffer (cin), validações e cancelamentos.
+
+-> Validacao: Classe estática com algoritmos matemáticos de CPF/CNPJ.
+
+-> Pessoa / Catador / Colaborador: Classes de Modelo (Entidades).
+
+-> Cooperativas: Classe de Modelo com lógica financeira.
+
+-> Administrador: Classe de serviço para relatórios.
+
+-> Material: Objeto simples representando o item reciclável.
+
+-> *.txt: Bases de dados persistentes.
+
+
+## Pontos Importantes
+
+1. *Segurança*: Cada usuário só acessa seus próprios dados
+2. *Consistência*: Transações atualizam múltiplos arquivos simultaneamente
+3. *Usabilidade*: Menus intuitivos com validação passo a passo
+4. *Extensibilidade*: Arquitetura modular permite adição de novos recursos
+
+## Possíveis Melhorias Futuras
+
+1. Interface gráfica
+2. Banco de dados (SQLite/MySQL)
+3. Autenticação com senha
+4. Sistema de notificações
+5. Relatórios em formato PDF
+6. API para integração com outros sistemas
+
+## Troubleshooting
+
+### Problemas Comuns
+
+1. *Erro de compilação*: Verifique se todos os arquivos .cpp estão no diretório
+2. *Arquivos não encontrados*: Execute o programa no diretório correto
+3. *Entrada inválida*: O sistema pedirá para digitar novamente
+4. *Dados corrompidos*: Os arquivos .txt podem ser editados manualmente
+
+### Logs e Debug
+- Todas as transações são registradas em historico_compras.txt
+- Erros de validação são mostrados no console
+- Dados de usuários podem ser visualizados nos arquivos .txt
+
+---
+
+O sistema oferece uma solução completa para gestão de reciclagem, desde a coleta até a comercialização, com foco em usabilidade e robustez técnica.
+
+## Estrutura de Classes (Diagrama Conceitual)
+
+Pessoa (Classe Base)
+├── Catador
+│   ├── Nome, CPF, Endereço
+│   ├── Saldo financeiro
+│   └── Material coletado
+└── Colaborador
+    ├── Nome, CPF, Endereço
+    ├── Pontuação
+    └── Material doado
+
+Cooperativas (Classe Independente)
+├── CNPJ, Endereço
+├── Preços por material
+└── Histórico de compras
+
+Material (Classe de Associação)
+├── Tipo (1=Plástico, 2=Papel, 3=Metal)
+└── Peso (kg)
+
+Administrador (Classe Utilitária)
+├── Visualização de dados
+├── Geração de relatórios
+└── Ranking de pontuação
+
+## Regras de Negócio
+
+### Sistema de Pontuação
+- Plástico: 3 pontos por kg
+- Papel: 2 pontos por kg
+- Metal: 4 pontos por kg
+
+### Validação de Transações
+1. Catador e Cooperativa devem estar no mesmo endereço
+2. CPF/CNPJ devem ser únicos no sistema
+3. Peso do material deve ser maior que zero
+4. Preços devem ser definidos pela cooperativa
+
+### Persistência
+- Cada novo usuário gera uma entrada no arquivo correspondente
+- Cada transação gera uma linha em historico_compras.txt
+- Pontuações e saldos são atualizados nos arquivos de cadastro
+
+### Diagrama de Classes
+https://www.canva.com/design/DAG4BHEGPtI/3AuO0Ok3Jp2t8DOaY5Us8A/edit?utm_content=DAG4BHEGPtI&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton

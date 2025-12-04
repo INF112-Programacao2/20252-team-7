@@ -1,154 +1,314 @@
 #include "cooperativas.hpp"
 #include "material.hpp"
 #include "Catador.hpp"
-#include "colaborador.hpp"
 #include <iostream>
 #include <fstream>
-#include <iomanip>  // ADICIONADO para std::setprecision
+#include <iomanip> // [Stream] Necessário para formatar saída (setprecision)
 
-Cooperativas::Cooperativas() {
-    preco = 0;
-    cnpj = "";
-    endereco = "";
-    material = nullptr;
-}
+// ==================================================================================
+// CONSTRUTOR PADRÃO
+// ==================================================================================
+Cooperativas::Cooperativas() 
+    : precoPlastico(0), precoPapel(0), precoMetal(0), cnpj(""), endereco(""), material(nullptr) {}
 
-Cooperativas::Cooperativas(float preco, std::string cnpj, std::string endereco, Material* material) {
-    this->preco = preco;
-    this->cnpj = cnpj;
-    this->endereco = endereco;
-    this->material = material;
-}
+// ==================================================================================
+// CONSTRUTOR PARAMETRIZADO
+// ==================================================================================
+Cooperativas::Cooperativas(float pPlastico, float pPapel, float pMetal, std::string c, std::string e, Material* m) 
+    : precoPlastico(pPlastico), precoPapel(pPapel), precoMetal(pMetal), cnpj(c), endereco(e), material(m) {}
 
-float Cooperativas::getPreco() { return this->preco; }
-std::string Cooperativas::getCnpj() { return this->cnpj; }
-std::string Cooperativas::getEndereco() { return this->endereco; }
-Material* Cooperativas::getMaterial() { return this->material; }
-
-void Cooperativas::setPreco(float preco) { this->preco = preco; }
-void Cooperativas::setCnpj(std::string cnpj) { this->cnpj = cnpj; }
-void Cooperativas::setEndereco(std::string endereco) { this->endereco = endereco; }
-void Cooperativas::setMaterial(Material* material) { this->material = material; }
-
-Cooperativas::~Cooperativas() {}
-
-void Cooperativas::calcularPreco(float peso, float precoPorKg) {
-    float total = peso * precoPorKg;
-    std::cout << "Total a pagar: R$ " << total << std::endl;
-}
-
-void Cooperativas::comprarMaterial(Catador& catador, float peso, float precoPorKg) {
-    if (catador.getEndereco() == this->endereco) {
-        float valor = peso * precoPorKg;
-        catador.setSaldo(catador.getSaldo() + valor);
-        std::cout << "Compra realizada! Catador " << catador.getNome() 
-                  << " recebeu R$ " << valor << std::endl;
-    } else {
-        std::cout << "Endereço do catador diferente da cooperativa. Compra não realizada." << std::endl;
+// ==================================================================================
+// DESTRUTOR (Gerenciamento de Memória)
+// ==================================================================================
+Cooperativas::~Cooperativas() {
+    if (material != nullptr) {
+        delete material; // Libera a memória RAM
+        material = nullptr; // Zera o ponteiro por segurança
     }
 }
 
-void Cooperativas::consultarPrecoCooperativa() {
-    std::cout << "Preço base da cooperativa: R$ " << preco << " por kg" << std::endl;
+// ==================================================================================
+// GETTERS E SETTERS
+// ==================================================================================
+float Cooperativas::getPrecoPlastico() { return precoPlastico; }
+float Cooperativas::getPrecoPapel() { return precoPapel; }
+float Cooperativas::getPrecoMetal() { return precoMetal; }
+
+void Cooperativas::setPrecos(float plastico, float papel, float metal) {
+    this->precoPlastico = plastico;
+    this->precoPapel = papel;
+    this->precoMetal = metal;
 }
 
-void Cooperativas::relatorio() {
-    std::cout << "=== RELATÓRIO COOPERATIVA ===" << std::endl;
-    std::cout << "CNPJ: " << cnpj << std::endl;
-    std::cout << "Endereço: " << endereco << std::endl;
-    std::cout << "Preço base: R$ " << preco << std::endl;
-    if (material) {
-        std::cout << "Material em estoque: " << material->getPeso() 
-                  << "kg, tipo " << material->getTipo() << std::endl;
-    } else {
-        std::cout << "Nenhum material em estoque." << std::endl;
+std::string Cooperativas::getCnpj() { return cnpj; }
+std::string Cooperativas::getEndereco() { return endereco; }
+Material* Cooperativas::getMaterial() { return material; }
+
+void Cooperativas::setCnpj(std::string c) { cnpj = c; }
+void Cooperativas::setEndereco(std::string e) { endereco = e; }
+
+// [Memória] Setter seguro: Deleta o material antigo antes de apontar para o novo.
+void Cooperativas::setMaterial(Material* m) { 
+    if (material) delete material;
+    material = m; 
+}
+
+// ==================================================================================
+// MÉTODO DE NEGÓCIO: COMPRAR MATERIAL
+// ----------------------------------------------------------------------------------
+// Este método recebe um objeto 'Catador' por referência (&).
+// Isso permite que a Cooperativa altere diretamente o objeto catador original
+// (especificamente, aumentando o saldo dele).
+//
+// Lógica:
+// 1. Verifica compatibilidade de endereço (Regra de Negócio).
+// 2. Identifica o tipo de material e seleciona o preço correto.
+// 3. Calcula o total e deposita no saldo do Catador (em memória RAM).
+//    Nota: A persistência no arquivo é feita separadamente pelo Controller.
+// ==================================================================================
+void Cooperativas::comprarMaterial(Catador& catador, float peso) {
+    // Validação de Regra de Negócio
+    if (catador.getEndereco() != this->endereco) {
+        std::cout << "Erro: O catador nao esta no mesmo endereco da cooperativa.\n";
+        return;
     }
-}
+    if (!catador.getMaterial()) {
+        std::cout << "Erro: Catador nao tem material.\n";
+        return;
+    }
 
-void Cooperativas::cadastro(float preco, std::string endereco, std::string cnpj, Material* material) {
-    this->preco = preco;
-    this->endereco = endereco;
-    this->cnpj = cnpj;
-    this->material = material;
+    // Seleção de Preço 
+    float precoAplicado = 0;
+    int tipo = catador.getMaterial()->getTipo();
     
+    if (tipo == 1) precoAplicado = this->precoPlastico;
+    else if (tipo == 2) precoAplicado = this->precoPapel;
+    else if (tipo == 3) precoAplicado = this->precoMetal;
+
+    if (precoAplicado <= 0) {
+        std::cout << "Erro: Preco nao definido para este tipo de material.\n";
+        return;
+    }
+
+    float valorTotal = peso * precoAplicado;
+    
+    // Modificação do estado do objeto colaborador
+    catador.setSaldo(catador.getSaldo() + valorTotal);
+    
+    std::cout << "=== COMPRA REALIZADA ===\n";
+    std::cout << "Material: " << catador.getMaterial()->getNomeTipo() << "\n";
+    std::cout << "Peso: " << peso << "kg\n";
+    std::cout << "Valor total pago: R$ " << valorTotal << "\n";
+}
+
+// ==================================================================================
+// CADASTRO
+// ----------------------------------------------------------------------------------
+// Salva os dados da cooperativa no arquivo de texto.
+// ==================================================================================
+void Cooperativas::cadastro(float pPlastico, float pPapel, float pMetal, std::string endereco, std::string cnpj, Material* material) {
+    this->precoPlastico = pPlastico;
+    this->precoPapel = pPapel;
+    this->precoMetal = pMetal;
+    this->endereco = endereco;
+    this->cnpj = cnpj;
+    this->setMaterial(material);
+    
+    // [File I/O] std::ios::app garante que adicionamos ao final do arquivo sem apagar o que já existe
     std::ofstream arquivo("cadastro_cooperativa.txt", std::ios::app);
-    if (!arquivo.is_open()) {
-        std::cerr << "Erro ao abrir o arquivo de cadastro." << std::endl;
-        return;
+    if (arquivo.is_open()) {
+        arquivo << "CNPJ: " << cnpj << "\n";
+        arquivo << "Endereco: " << endereco << "\n";
+        arquivo << "Precos - Plastico: R$" << pPlastico 
+                << " | Papel: R$" << pPapel 
+                << " | Metal: R$" << pMetal << "\n";
+        arquivo << "------------------------\n";
+        arquivo.close();
+        std::cout << "Cooperativa cadastrada com sucesso!\n";
     }
-
-    arquivo << "CNPJ: " << cnpj << ", Endereço: " << endereco << ", Preço: R$ " << preco;
-    if (material) {
-        arquivo << ", Material: " << material->getPeso() << "kg tipo " << material->getTipo();
-    }
-    arquivo << std::endl;
-    arquivo.close();
-    
-    std::cout << "Cooperativa cadastrada com sucesso!" << std::endl;
 }
-
-void Cooperativas::relatorioMaterialComprado() {
-    std::cout << "\n=== RELATÓRIO DE MATERIAL COMPRADO ===\n";
-    std::ifstream arquivo("historico_compras.txt");
+// === Vefifica os dados reais do arquivo, separando por cooperativa ===
+void Cooperativas::carregarDados() {
+    std::ifstream arquivo("cadastro_cooperativa.txt");
     std::string linha;
+    bool encontrou = false;
     
-    if (!arquivo.is_open()) {
-        std::cout << "Nenhuma compra registrada.\n";
-        return;
-    }
-    
-    float totalComprado = 0;
+    if (!arquivo.is_open()) return;
+
     while (std::getline(arquivo, linha)) {
-        std::cout << linha << std::endl;
+        // Procura o CNPJ
+        if (linha.find("CNPJ: " + this->cnpj) != std::string::npos) {
+            encontrou = true;
+        }
         
-        // Extrair peso da linha
-        size_t posKg = linha.find("kg");
-        if (posKg != std::string::npos) {
-            // Encontrar início do número
-            size_t start = linha.find("comprou ") + 8;
-            if (start != std::string::npos) {
-                std::string pesoStr = linha.substr(start, posKg - start);
+        if (encontrou) {
+            // Lê Endereço
+            if (linha.find("Endereco: ") != std::string::npos) {
+                this->endereco = linha.substr(10);
+            }
+            
+            // Lê Preços
+            if (linha.find("Precos -") != std::string::npos) {
                 try {
-                    float peso = std::stof(pesoStr);
-                    totalComprado += peso;
+                    // Extrai Plastico
+                    size_t posPlast = linha.find("Plastico: R$");
+                    size_t posPipe1 = linha.find(" |", posPlast);
+                    std::string sPlast = linha.substr(posPlast + 12, posPipe1 - (posPlast + 12));
+                    this->precoPlastico = std::stof(sPlast);
+                    
+                    // Extrai Papel
+                    size_t posPapel = linha.find("Papel: R$");
+                    size_t posPipe2 = linha.find(" |", posPapel);
+                    std::string sPapel = linha.substr(posPapel + 9, posPipe2 - (posPapel + 9));
+                    this->precoPapel = std::stof(sPapel);
+                    
+                    // Extrai Metal
+                    size_t posMetal = linha.find("Metal: R$");
+                    std::string sMetal = linha.substr(posMetal + 9);
+                    this->precoMetal = std::stof(sMetal);
+                    
                 } catch (...) {
-                    // Ignora erro de conversão
+                    // Valores padrão em caso de erro no arquivo
+                    this->precoPlastico = 0; this->precoPapel = 0; this->precoMetal = 0;
                 }
             }
+            
+            // Se chegou na linha tracejada, acabou
+            if (linha.find("------------------------") != std::string::npos) break;
         }
     }
     arquivo.close();
-    
-    std::cout << "\nTotal comprado: " << totalComprado << " kg\n";
 }
 
-void Cooperativas::registrarCompra(const std::string& nomeCatador, float peso, float precoKg) {
+// ==================================================================================
+// RELATÓRIO COM FILTRO
+// ----------------------------------------------------------------------------------
+// [Lógica de Filtro]
+// Lê o arquivo 'historico_compras.txt' linha por linha, mas imprime na tela apenas
+// as linhas que contêm o CNPJ desta cooperativa específica.
+// Isso garante a privacidade dos dados entre diferentes empresas.
+// ==================================================================================
+void Cooperativas::relatorioMaterialComprado() {
+    std::cout << "\n=== HISTORICO DE COMPRAS (CNPJ: " << this->cnpj << ") ===\n";
+    std::ifstream arquivo("historico_compras.txt");
+    std::string linha;
+    bool encontrouAlguma = false;
+
+    if (arquivo.is_open()) {
+        while (std::getline(arquivo, linha)) {
+            if (linha.find("Coop " + this->cnpj) != std::string::npos) {
+                std::cout << linha << "\n";
+                encontrouAlguma = true;
+            }
+        }
+        arquivo.close();
+        
+        if (!encontrouAlguma) {
+            std::cout << "Nenhuma compra registrada para este CNPJ.\n";
+        }
+    } else {
+        std::cout << "Arquivo de historico ainda nao existe.\n";
+    }
+}
+
+// ==================================================================================
+// REGISTRAR TRANSAÇÃO
+// ----------------------------------------------------------------------------------
+// Adiciona uma nova linha ao log de transações.
+// ==================================================================================
+void Cooperativas::registrarCompra(const std::string& cpfCatador, float peso, float valorTotal, std::string nomeMaterial) {
     std::ofstream arquivo("historico_compras.txt", std::ios::app);
+    if (arquivo.is_open()) {
+        // Formato padronizado: "Coop [CNPJ] pagou R$ [$$] por [peso]kg de [tipo] ao CPF [cpf]"
+        arquivo << "Coop " << this->cnpj << " pagou R$ " << std::fixed << std::setprecision(2) 
+                << valorTotal << " por " << peso << "kg de " << nomeMaterial 
+                << " ao CPF " << cpfCatador << "\n";
+        arquivo.close();
+    }
+}
+
+// ==================================================================================
+// RELATÓRIO ESTATÍSTICO
+// ----------------------------------------------------------------------------------
+// 1. Lê o arquivo de histórico.
+// 2. Filtra pelo CNPJ.
+// 3. Faz a extração dos números de peso de dentro do texto.
+// 4. Soma os totais por categoria.
+// 5. Gera um novo arquivo .txt exclusivo com o resumo.
+// ==================================================================================
+void Cooperativas::gerarRelatorioEstatistico() {
+    std::ifstream arquivo("historico_compras.txt");
     if (!arquivo.is_open()) {
-        std::cerr << "Erro ao registrar compra.\n";
+        std::cout << "Nenhum historico encontrado para gerar relatorio.\n";
         return;
     }
+
+    std::string linha;
+    float totalPlastico = 0;
+    float totalPapel = 0;
+    float totalMetal = 0;
     
-    float valorTotal = peso * precoKg;
-    arquivo << "Cooperativa " << this->cnpj << " comprou " << peso << "kg de " << nomeCatador 
-            << " por R$ " << std::fixed << std::setprecision(2) << valorTotal << std::endl;
+    std::cout << "\n>> Calculando estatisticas para CNPJ " << this->cnpj << "...\n";
+
+    while (std::getline(arquivo, linha)) {
+        // Filtro de Segurança
+        if (linha.find("Coop " + this->cnpj) != std::string::npos) {
+            
+            float pesoLinha = 0;
+            
+            // [Tratamento de Exceção] Tenta converter string para float
+            try {
+                // Procura os marcadores de texto " por " e "kg de " para isolar o número
+                size_t posPor = linha.find(" por ");
+                size_t posKg = linha.find("kg de ");
+                
+                if (posPor != std::string::npos && posKg != std::string::npos) {
+                    size_t inicioNumero = posPor + 5; // Pula " por "
+                    // substr(posicao_inicial, tamanho)
+                    std::string pesoStr = linha.substr(inicioNumero, posKg - inicioNumero);
+                    pesoLinha = std::stof(pesoStr);
+                }
+            } catch (...) {
+                continue; // Se falhar na conversão, ignora esta linha e segue
+            }
+
+            // Agregação de Dados
+            if (linha.find("Plastico") != std::string::npos) totalPlastico += pesoLinha;
+            else if (linha.find("Papel") != std::string::npos) totalPapel += pesoLinha;
+            else if (linha.find("Metal") != std::string::npos) totalMetal += pesoLinha;
+        }
+    }
     arquivo.close();
-    
-    std::cout << "Compra registrada no histórico!\n";
+
+    // Geração de Arquivo de Saída
+    std::string nomeArquivoSaida = "estatisticas_" + this->cnpj + ".txt";
+    std::ofstream saida(nomeArquivoSaida);
+
+    if (saida.is_open()) {
+        saida << "=== RELATORIO ESTATISTICO DE COMPRAS ===\n";
+        saida << "CNPJ: " << this->cnpj << "\n";
+        saida << "--------------------------------------\n";
+        saida << "MATERIAL    | QUANTIDADE TOTAL (KG)\n";
+        saida << "--------------------------------------\n";
+        saida << "Plastico    | " << std::fixed << std::setprecision(2) << totalPlastico << " kg\n";
+        saida << "Papel       | " << std::fixed << std::setprecision(2) << totalPapel << " kg\n";
+        saida << "Metal       | " << std::fixed << std::setprecision(2) << totalMetal << " kg\n";
+        saida << "--------------------------------------\n";
+        saida << "TOTAL GERAL | " << (totalPlastico + totalPapel + totalMetal) << " kg\n";
+        saida.close();
+        
+        std::cout << "\n[SUCESSO] Relatorio gerado em '" << nomeArquivoSaida << "'\n";
+    } else {
+        std::cout << "Erro ao criar arquivo de relatorio.\n";
+    }
 }
 
 void Cooperativas::visualizarCooperativas() {
-    std::cout << "\n=== COOPERATIVAS DISPONÍVEIS ===\n";
+    std::cout << "\n=== COOPERATIVAS DISPONIVEIS ===\n";
     std::ifstream arquivo("cadastro_cooperativa.txt");
     std::string linha;
-    
-    if (!arquivo.is_open()) {
-        std::cout << "Nenhuma cooperativa cadastrada.\n";
-        return;
+    if (arquivo.is_open()) {
+        while (std::getline(arquivo, linha)) std::cout << linha << "\n";
+        arquivo.close();
     }
-    
-    while (std::getline(arquivo, linha)) {
-        std::cout << linha << std::endl;
-    }
-    arquivo.close();
 }

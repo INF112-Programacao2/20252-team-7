@@ -1,18 +1,27 @@
-Nome: João Silva
-Endereço: Rua A, 123
-CPF: 123.456.789-01
-Material: 20kg (tipo 2)
-Pontos: 225
+Nome: Ana Martins Da Silva
+Endereço: Rua Golçalves, B. Ubuntu, 987
+CPF: 10203040501
+Material: Nenhum (Cadastro Inicial)
+Pontos: 100
 ------------------------
-Nome: Luis Roberto
-Endereço: Av Castelo Branco
-CPF: 02632414245
-Material: 50kg (tipo 1)
-Pontos: 0
+Nome: Joana
+Endereço: Rua dos Estudantes
+CPF: 50138766649
+Material: 8.00kg de Papel
+Material: 15.00kg de Metal
+Pontos: 176
 ------------------------
-Nome: Flamengo
-Endereço: Lima, Pera
-CPF: 345.678-98
-Material: 12kg (tipo 34)
-Pontos: 0
+Nome: Joaquin
+Endereço: Flores 
+CPF: 70228121604
+Material: 16.00kg de Papel
+Material: 60.00kg de Metal
+Material: 3.00kg de Plastico
+Pontos: 381
+------------------------
+Nome: pedro
+Endereço: sape
+CPF: 12852079631
+Material: Nenhum (Cadastro Inicial)
+Pontos: 100
 ------------------------

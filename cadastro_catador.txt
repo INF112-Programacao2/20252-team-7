@@ -1,12 +1,18 @@
-Nome: Maria Oliveira
-Endereço: Rua A, 123
-CPF: 987.654.321-00
-Material - Peso: 20, Tipo: 2
-Saldo: R$ 107.3
+Nome: João da Costa
+Endereço: Rua Jardim Pérola, B. Jacarandá, 174
+CPF: 12345678901
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 2000.000000
 ------------------------
-Nome: 
-Endereço: 2
-CPF: 2
-Material - Peso: 2, Tipo: 2
+Nome: Gabriel Valerio
+Endereço: Centro, Vicosa 
+CPF: 70228121604
+Material: Nenhum (Cadastro Inicial)
+Saldo: R$ 325.000000
+------------------------
+Nome: pedro
+Endereço: sape
+CPF: 12852079631
+Material: Nenhum (Cadastro Inicial)
 Saldo: R$ 0
 ------------------------
