@@ -13,7 +13,7 @@
 // MÉTODO: executar
 // ----------------------------------------------------------------------------------
 // Ponto de entrada da classe. A main.cpp chama apenas isso.
-// Encapsula toda a lógica do sistema dentro do Controller.
+// Encapsula toda a lógica do sistema dentro do Controller. 
 // ==================================================================================
 void SistemaController::executar() {
     menuPrincipal();
