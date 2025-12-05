@@ -10,7 +10,7 @@
 // do mundo real (como uma Pessoa), mas sim o FLUXO do programa.
 // Responsabilidades:
 // 1. Gerenciar os Menus.
-// 2. Receber input do usuário (via InputHandler).
+// 2. Receber input do usuário (via InputHandler). 
 // 3. Instanciar e comandar os Objetos (Catador, Colaborador, etc).
 // ==================================================================================
 class SistemaController {
