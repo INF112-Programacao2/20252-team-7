@@ -7,7 +7,7 @@
 // ==================================================================================
 // CLASSE PESSOA (Classe Base / Superclasse)
 // ----------------------------------------------------------------------------------
-// [POO - Herança]
+// [POO - Herança] 
 // Esta classe serve de molde para 'Catador' e 'Colaborador'.
 // Ela contém os atributos que são COMUNS a todos os usuários do sistema.
 // ==================================================================================
