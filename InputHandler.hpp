@@ -5,7 +5,7 @@
 #include <iostream> 
 
 // ==================================================================================
-// CLASSE INPUTHANDLER (Manipulador de Entradas)
+// CLASSE INPUTHANDLER (Manipulador de Entradas) 
 // ----------------------------------------------------------------------------------
 // Esta classe é uma "caixa de ferramentas". Ela não mantém estado (não tem variáveis
 // como 'nome' ou 'saldo'). A única função dela é fornecer métodos seguros para ler
