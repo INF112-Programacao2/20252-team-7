@@ -3,7 +3,7 @@
 #include <fstream>  // [Persistência] Biblioteca para manipulação de arquivos (File I/O)
 #include <vector>   // [Memória] Biblioteca STL para vetores dinâmicos (arrays que crescem)
 #include <string>
-
+//
 // ==================================================================================
 // CONSTRUTOR DE CÓPIA
 // Este construtor permite criar um Catador a partir de um objeto Pessoa genérico.
