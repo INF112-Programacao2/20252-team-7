@@ -6,7 +6,7 @@
 // ----------------------------------------------------------------------------------
 // [POO] Inicialização de Objetos.
 // Utilizamos a "Lista de Inicialização" (: _nome(nome), ...) que é mais eficiente
-// do que fazer atribuições dentro das chaves { }.
+// do que fazer atribuições dentro das chaves { }. 
 // ==================================================================================
 Pessoa::Pessoa(std::string nome, std::string endereco, std::string cpf, Material* material)
     : _nome(nome), _endereco(endereco), _cpf(cpf), _material(material) {}
